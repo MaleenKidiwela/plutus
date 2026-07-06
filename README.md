@@ -31,7 +31,12 @@ Trading auto-stops after 21 trading days.
 - **Engine:** [`scripts/run_cycle.py`](scripts/run_cycle.py) — zero dependencies.
   Fetches prices (Finnhub, Yahoo fallback), lets each bot trade, validates every
   order against the hard rules, appends the audit log.
-- **Scheduler:** GitHub Actions cron, `30 14,19 * * 1-5` UTC (~10:30 & ~15:30 ET).
+- **Scheduler:** a Claude Code **routine** (scheduled cloud agent) runs twice
+  daily (`30 14,19 * * 1-5` UTC, ~10:30 & ~15:30 ET). The routine agent *is*
+  Plutus: it reads the charter, researches the web with its own tools, writes
+  `plutus_decision.json`, runs the engine (which validates + executes all four
+  bots), and pushes the updated data. The GitHub Actions workflow remains as a
+  manual fallback only.
 - **Database:** the repo itself. `data/*.json` is committed every cycle — the git
   history is a tamper-evident audit trail of prices, trades, and rationales.
 - **Dashboard:** [`index.html`](index.html) on GitHub Pages. Equity curves,
@@ -40,17 +45,24 @@ Trading auto-stops after 21 trading days.
 
 ## Setup (one time)
 
-1. Create a GitHub repo and push this directory to `main`.
-2. **Settings → Pages** → deploy from branch `main`, root.
-3. **Settings → Secrets and variables → Actions** → add:
-   - `ANTHROPIC_API_KEY` — for Plutus's decisions
-   - `FINNHUB_API_KEY` — free at [finnhub.io](https://finnhub.io) (optional;
-     falls back to Yahoo's delayed keyless data)
-4. **Actions** tab → enable workflows. The `trading-cycle` workflow can be
-   triggered manually with *Run workflow* to test.
+1. Push this repo to GitHub; **Settings → Pages** → deploy from `main`, root.
+2. Create the Claude Code routine (twice daily, cron `30 14,19 * * 1-5`) with
+   the Plutus run instructions — see the routine prompt in this repo's setup
+   notes. In the routine's settings, **allow unrestricted branch pushes** so it
+   can commit `data/` to `main` (Pages serves from `main`).
+3. Optional: `FINNHUB_API_KEY` in the routine environment for real-time quotes;
+   the engine falls back to Yahoo's delayed keyless data without it.
 
-Note: GitHub pauses cron schedules after 60 days without repo activity — the
-twice-daily commits keep it alive, but if you fork this, kick it off manually.
+No Anthropic API key is needed — Plutus's thinking runs on the routine itself.
+
+## The cycle, step by step (what the routine does)
+
+```sh
+python3 scripts/run_cycle.py --quote   # 1. briefing: prices, holdings, rules
+# 2. the agent researches the web, then writes plutus_decision.json
+python3 scripts/run_cycle.py           # 3. engine validates + executes all bots
+git add data/ && git commit && git push  # 4. publish the audit trail
+```
 
 ## Local dry run
 

@@ -295,9 +295,27 @@ def parse_decision(blocks):
     raise ValueError("no valid decision JSON in response")
 
 
+DECISION_FILE = os.path.join(ROOT, "plutus_decision.json")
+
+
 def bot_plutus(bot_state, prices, rules, history, trades_log, ts, cfg, **_):
+    # Routine mode: a scheduled Claude agent researches the market itself and
+    # writes {"market_view": ..., "orders": [...]} to plutus_decision.json
+    # before invoking the engine. Consumed once, then deleted.
+    if os.path.exists(DECISION_FILE):
+        with open(DECISION_FILE) as f:
+            decision = json.load(f)
+        if not DRY_RUN:
+            os.remove(DECISION_FILE)
+        view = str(decision.get("market_view", "")).strip()
+        if view:
+            log(f"plutus view (routine): {view}")
+            append_view(ts, view)
+        orders = decision.get("orders", [])
+        return orders if isinstance(orders, list) else []
+
     if not ANTHROPIC_KEY:
-        log("plutus: no ANTHROPIC_API_KEY — holding")
+        log("plutus: no decision file and no ANTHROPIC_API_KEY — holding")
         return []
     with open(os.path.join(ROOT, cfg["bots"]["plutus"]["charter"])) as f:
         charter = f.read()
@@ -354,6 +372,32 @@ def append_view(ts, view):
 
 
 # ---------- Main cycle ----------
+
+def quote_mode():
+    """Print the decision briefing for the routine agent: live watchlist
+    prices, Plutus's holdings/cash, and its recent trades. No side effects."""
+    cfg = load("config.json")
+    portfolio = load("portfolio.json")
+    trades = load("trades.json")
+    universe = sorted(sum(cfg["universe"].values(), []))
+    state = portfolio["bots"]["plutus"]
+    extras = sorted(s for s in state["positions"] if s not in universe)
+    prices, source = fetch_prices(universe + extras)
+    print(json.dumps({
+        "timestamp_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "source": source,
+        "rules": cfg["rules"],
+        "plutus_cash": round(state["cash"], 2),
+        "plutus_positions": {
+            s: {"qty": round(q, 4), "value": round(q * prices.get(s, 0), 2)}
+            for s, q in state["positions"].items()
+        },
+        "plutus_nav": nav_of(state, prices),
+        "watchlist_prices": prices,
+        "plutus_recent_trades": [t for t in trades if t["bot"] == "plutus"][-12:],
+    }, indent=1))
+    return 0
+
 
 def main():
     cfg = load("config.json")
@@ -449,4 +493,4 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(quote_mode() if "--quote" in sys.argv else main())
