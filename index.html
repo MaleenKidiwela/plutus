@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plutus — LLM Trading Experiment</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --paper:#F6F7F9; --panel:#FFFFFF; --panel-2:#EEF1F5;
+    --ink:#191C23; --ink-soft:#474D58; --muted:#6B7280;
+    --hair:#DCE0E7; --hair-strong:#C6CBD4;
+    --accent:#9A6A1C; --accent-ink:#7C5514; --accent-soft:#F1E7D3;
+    --gain:#2C8A57; --loss:#BE4038; --warn:#A9761F;
+    --serif:'Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif;
+    --sans:system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,'SF Mono',SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper:#0F1218; --panel:#161A22; --panel-2:#1D222C;
+      --ink:#E8EAEE; --ink-soft:#B0B6C1; --muted:#808896;
+      --hair:#272D38; --hair-strong:#333B48;
+      --accent:#D9AE63; --accent-ink:#E6C588; --accent-soft:#251F14;
+      --gain:#4FB07A; --loss:#E07065; --warn:#D9AE63;
+    }
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--paper); color:var(--ink); font-family:var(--sans);
+         font-size:16px; line-height:1.55; -webkit-font-smoothing:antialiased; }
+  .col { max-width:1020px; margin:0 auto; padding:0 22px; }
+  h1,h2,h3 { font-family:var(--serif); font-weight:600; text-wrap:balance; margin:0; }
+  a { color:var(--accent-ink); }
+  .num { font-variant-numeric:tabular-nums; font-family:var(--mono); }
+
+  header { border-bottom:1px solid var(--hair); padding:34px 0 26px;
+           background:radial-gradient(110% 160% at 92% -20%, var(--accent-soft) 0%, transparent 45%); }
+  .head-row { display:flex; flex-wrap:wrap; align-items:flex-end; gap:16px 28px; justify-content:space-between; }
+  .brand { font-size:clamp(38px,7vw,56px); letter-spacing:-0.02em; line-height:0.95; }
+  .brand .dot { color:var(--accent); }
+  .tagline { color:var(--ink-soft); font-family:var(--serif); font-size:16px; margin-top:8px; }
+  .status { font-family:var(--mono); font-size:12.5px; color:var(--muted); text-align:right; line-height:1.8; }
+  .status b { color:var(--ink); font-weight:600; }
+
+  section { padding:34px 0 8px; }
+  .sec-label { font-family:var(--mono); font-size:11.5px; letter-spacing:0.14em;
+               text-transform:uppercase; color:var(--accent); margin-bottom:12px; }
+
+  .scoreboard { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:10px; }
+  .score { border:1px solid var(--hair); border-radius:4px; background:var(--panel); padding:14px 15px; }
+  .score.hero { border-color:var(--accent); border-top:3px solid var(--accent); }
+  .score .bn { display:flex; align-items:center; gap:8px; font-family:var(--serif); font-size:15.5px; }
+  .sw { width:10px; height:10px; border-radius:2px; flex:none; }
+  .score .rv { font-size:24px; margin-top:8px; font-weight:600; }
+  .score .rx { font-size:12px; color:var(--muted); margin-top:3px; }
+  .pos { color:var(--gain); } .neg { color:var(--loss); }
+  @media (max-width:760px){ .scoreboard { grid-template-columns:repeat(2,1fr); } }
+
+  .panel { border:1px solid var(--hair); border-radius:4px; background:var(--panel); padding:18px; }
+  .chart-wrap { position:relative; height:380px; }
+  @media (max-width:600px){ .chart-wrap{ height:280px; } }
+
+  .split { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  @media (max-width:820px){ .split { grid-template-columns:1fr; } }
+
+  .table-scroll { overflow-x:auto; }
+  table { border-collapse:collapse; width:100%; font-size:13.5px; }
+  th,td { text-align:right; padding:8px 10px; border-bottom:1px solid var(--hair); white-space:nowrap; }
+  th:first-child, td:first-child { text-align:left; }
+  th { font-family:var(--mono); font-size:10.5px; letter-spacing:0.08em; text-transform:uppercase;
+       color:var(--muted); background:var(--panel-2); }
+  td { font-variant-numeric:tabular-nums; color:var(--ink-soft); }
+  td:first-child { color:var(--ink); font-weight:550; }
+  tr:last-child td { border-bottom:none; }
+  .dir-note { font-family:var(--mono); font-size:11px; color:var(--warn); margin:10px 0 0; }
+
+  .holdings { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }
+  @media (max-width:820px){ .holdings { grid-template-columns:1fr; } }
+  .hold-card h3 { font-size:16px; display:flex; gap:8px; align-items:center; margin-bottom:10px; }
+  .hold-card .cash { font-family:var(--mono); font-size:11.5px; color:var(--muted); margin-left:auto; }
+
+  .journal .entry { border-left:3px solid var(--accent); background:var(--panel);
+    border-radius:0 4px 4px 0; border-top:1px solid var(--hair); border-right:1px solid var(--hair);
+    border-bottom:1px solid var(--hair); padding:13px 16px; margin-bottom:10px; }
+  .journal .ets { font-family:var(--mono); font-size:11px; color:var(--muted); margin-bottom:5px; }
+  .journal .ev { font-family:var(--serif); font-size:15.5px; color:var(--ink); }
+  .journal .etr { font-family:var(--mono); font-size:12px; color:var(--ink-soft); margin-top:7px; line-height:1.7; }
+  .journal .etr .b { color:var(--gain); } .journal .etr .s { color:var(--loss); }
+
+  .mc-note { font-size:13.5px; color:var(--ink-soft); margin-top:12px; }
+  .mc-note b { color:var(--ink); }
+
+  .caveat { border:1px dashed var(--hair-strong); border-radius:4px; padding:16px 18px;
+    font-size:12.5px; color:var(--muted); background:var(--panel); margin:36px 0 46px; }
+  .caveat b { color:var(--ink-soft); }
+  .empty { color:var(--muted); font-family:var(--mono); font-size:13px; padding:30px 0; text-align:center; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="col head-row">
+    <div>
+      <h1 class="brand">Plutus<span class="dot">.</span></h1>
+      <div class="tagline">Can a language model trade? A one-month, pre-registered paper experiment.</div>
+    </div>
+    <div class="status" id="status">loading…</div>
+  </div>
+</header>
+
+<main class="col">
+
+  <section>
+    <div class="sec-label">Scoreboard — total return since start</div>
+    <div class="scoreboard" id="scoreboard"></div>
+  </section>
+
+  <section>
+    <div class="sec-label">Growth of $1,000</div>
+    <div class="panel"><div class="chart-wrap"><canvas id="navChart"></canvas></div></div>
+  </section>
+
+  <section>
+    <div class="sec-label">Metrics</div>
+    <div class="split">
+      <div class="panel">
+        <h3 style="font-size:16px;margin-bottom:10px">Reliable-ish over a month</h3>
+        <div class="table-scroll" id="solidMetrics"></div>
+      </div>
+      <div class="panel">
+        <h3 style="font-size:16px;margin-bottom:10px">Directional only ⚠︎</h3>
+        <div class="table-scroll" id="softMetrics"></div>
+        <p class="dir-note">◇ n is far too small for these to mean much — shown for completeness, annualized from twice-daily observations.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-label">Current holdings</div>
+    <div class="holdings" id="holdings"></div>
+  </section>
+
+  <section>
+    <div class="sec-label">Plutus's journal — its own words, every cycle</div>
+    <div class="journal" id="journal"></div>
+  </section>
+
+  <section>
+    <div class="sec-label">Skill or luck? — the monkey test</div>
+    <div class="panel">
+      <div class="chart-wrap" style="height:260px"><canvas id="mcChart"></canvas></div>
+      <p class="mc-note" id="mcNote">Monte-Carlo panel unlocks after ~a week of price history.</p>
+    </div>
+  </section>
+
+  <div class="caveat">
+    <b>Not investment advice.</b> Plutus trades imaginary money with simulated fills
+    (5 bps fee + 5 bps slippage per side, applied to every bot). A one-month,
+    ~40-decision run is a single noisy draw — most professional managers trail the
+    index in any given year, and a random bot could plausibly win this window.
+    This is an experiment in how an LLM decides, not evidence of edge.
+    Rules were pre-registered before the first trade; the full audit trail is the
+    git history of this repository. Persona by Fable · decisions by Claude Opus 4.8.
+  </div>
+
+</main>
+
+<script>
+const BOTS = {
+  plutus:   { label:"Plutus",         color:"#B8842C", hero:true },
+  voo:      { label:"VOO Buy & Hold", color:"#8A8F9B" },
+  momentum: { label:"Momentum Bot",   color:"#2C8A57" },
+  random:   { label:"Random Monkey",  color:"#BE4038" },
+};
+const fmt$ = v => "$" + v.toFixed(2);
+const fmtPct = v => (v>=0?"+":"") + (v*100).toFixed(2) + "%";
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+function mulberry32(seed){ return function(){ seed|=0; seed=seed+0x6D2B79F5|0;
+  let t=Math.imul(seed^seed>>>15,1|seed); t=t+Math.imul(t^t>>>7,61|t)^t;
+  return ((t^t>>>14)>>>0)/4294967296; } }
+
+async function j(p){ const r = await fetch(p+"?t="+Date.now()); if(!r.ok) throw new Error(p); return r.json(); }
+
+function seriesFor(nav, bot){ return nav.filter(x=>x.bot===bot).map(x=>({ts:x.ts, nav:x.nav})); }
+
+function metrics(series, benchSeries, trades, bot){
+  if(series.length<2) return null;
+  const navs = series.map(p=>p.nav);
+  const rets = navs.slice(1).map((v,i)=>v/navs[i]-1);
+  const total = navs[navs.length-1]/navs[0]-1;
+  let peak=navs[0], mdd=0;
+  for(const v of navs){ peak=Math.max(peak,v); mdd=Math.max(mdd,(peak-v)/peak); }
+  const bench = benchSeries.length>1 ? benchSeries[benchSeries.length-1].nav/benchSeries[0].nav-1 : 0;
+  const notional = trades.filter(t=>t.bot===bot).reduce((s,t)=>s+t.notional,0);
+  const avgNav = navs.reduce((a,b)=>a+b,0)/navs.length;
+  const mean = rets.reduce((a,b)=>a+b,0)/rets.length;
+  const sd = Math.sqrt(rets.reduce((s,r)=>s+(r-mean)**2,0)/Math.max(rets.length-1,1));
+  const downs = rets.filter(r=>r<0);
+  const dsd = Math.sqrt(downs.reduce((s,r)=>s+r*r,0)/Math.max(downs.length,1));
+  const ann = Math.sqrt(504); // twice-daily observations
+  return {
+    total, excess: total-bench, mdd, turnover: notional/avgNav,
+    vol: sd*ann, sharpe: sd>0 ? mean/sd*ann : 0, sortino: dsd>0 ? mean/dsd*ann : 0,
+    win: rets.length ? rets.filter(r=>r>0).length/rets.length : 0,
+  };
+}
+
+function tbl(rows, headers){
+  return "<table><thead><tr>" + headers.map(h=>`<th>${h}</th>`).join("") +
+    "</tr></thead><tbody>" + rows.map(r=>"<tr>"+r.map((c,i)=>`<td>${c}</td>`).join("")+"</tr>").join("") +
+    "</tbody></table>";
+}
+const signCls = v => v>=0 ? "pos" : "neg";
+
+function renderScoreboard(nav){
+  const el = document.getElementById("scoreboard");
+  el.innerHTML = Object.entries(BOTS).map(([k,b])=>{
+    const s = seriesFor(nav,k);
+    const ret = s.length>1 ? s[s.length-1].nav/s[0].nav-1 : 0;
+    const last = s.length ? s[s.length-1].nav : 1000;
+    return `<div class="score${b.hero?" hero":""}">
+      <div class="bn"><span class="sw" style="background:${b.color}"></span>${b.label}</div>
+      <div class="rv num ${signCls(ret)}">${fmtPct(ret)}</div>
+      <div class="rx num">NAV ${fmt$(last)}</div></div>`;
+  }).join("");
+}
+
+function renderNavChart(nav){
+  const labels = [...new Set(nav.map(x=>x.ts))].sort();
+  const short = t => t.slice(5,16).replace("T"," ");
+  new Chart(document.getElementById("navChart"), {
+    type:"line",
+    data:{ labels: labels.map(short),
+      datasets: Object.entries(BOTS).map(([k,b])=>{
+        const m = new Map(seriesFor(nav,k).map(p=>[p.ts,p.nav]));
+        return { label:b.label, data:labels.map(t=>m.get(t)??null),
+          borderColor:b.color, backgroundColor:b.color, spanGaps:true,
+          borderWidth:b.hero?2.5:1.5, pointRadius:0, pointHitRadius:8, tension:0.25 };
+      })},
+    options:{ maintainAspectRatio:false, interaction:{mode:"index",intersect:false},
+      plugins:{ legend:{ labels:{ color:css("--ink-soft"), font:{family:"monospace",size:11},
+        boxWidth:14, boxHeight:3 } } },
+      scales:{ x:{ ticks:{ color:css("--muted"), font:{family:"monospace",size:10},
+          maxTicksLimit:10 }, grid:{ color:css("--hair") } },
+        y:{ ticks:{ color:css("--muted"), font:{family:"monospace",size:10},
+          callback:v=>"$"+v }, grid:{ color:css("--hair") } } } }
+  });
+}
+
+function renderMetrics(nav, trades){
+  const bench = seriesFor(nav,"voo");
+  const M = Object.fromEntries(Object.keys(BOTS).map(k=>[k, metrics(seriesFor(nav,k), bench, trades, k)]));
+  const names = Object.entries(BOTS);
+  const solid = names.map(([k,b])=>{
+    const m = M[k]; if(!m) return [b.label,"–","–","–","–"];
+    return [b.label,
+      `<span class="${signCls(m.total)}">${fmtPct(m.total)}</span>`,
+      `<span class="${signCls(m.excess)}">${fmtPct(m.excess)}</span>`,
+      fmtPct(-m.mdd).replace("+",""), (m.turnover*100).toFixed(0)+"%"];
+  });
+  document.getElementById("solidMetrics").innerHTML =
+    tbl(solid, ["Bot","Return","vs VOO","Max DD","Turnover"]);
+  const soft = names.map(([k,b])=>{
+    const m = M[k]; if(!m) return [b.label,"–","–","–","–"];
+    return [b.label, m.sharpe.toFixed(2), m.sortino.toFixed(2),
+      fmtPct(m.vol).replace("+",""), (m.win*100).toFixed(0)+"%"];
+  });
+  document.getElementById("softMetrics").innerHTML =
+    tbl(soft, ["Bot","Sharpe ◇","Sortino ◇","Vol ◇","Win rate ◇"]);
+}
+
+function renderHoldings(portfolio, prices){
+  const last = prices.length ? prices[prices.length-1].prices : {};
+  document.getElementById("holdings").innerHTML = Object.entries(BOTS).map(([k,b])=>{
+    const st = portfolio.bots[k];
+    const rows = Object.entries(st.positions)
+      .map(([sym,qty])=>({sym, qty, val:qty*(last[sym]||0)}))
+      .sort((a,b2)=>b2.val-a.val)
+      .map(p=>[p.sym, p.qty.toFixed(4), fmt$(p.val)]);
+    const body = rows.length ? tbl(rows,["Symbol","Qty","Value"])
+      : `<div class="empty">all cash</div>`;
+    return `<div class="panel hold-card"><h3>
+      <span class="sw" style="background:${b.color}"></span>${b.label}
+      <span class="cash">cash ${fmt$(st.cash)}</span></h3>
+      <div class="table-scroll">${body}</div></div>`;
+  }).join("");
+}
+
+function renderJournal(views, trades){
+  const el = document.getElementById("journal");
+  const byTs = {};
+  trades.filter(t=>t.bot==="plutus").forEach(t=>{ (byTs[t.ts] = byTs[t.ts]||[]).push(t); });
+  const entries = [...views].reverse().slice(0,12).map(v=>{
+    const tr = (byTs[v.ts]||[]).map(t=>
+      `<div><span class="${t.action==="buy"?"b":"s"}">${t.action.toUpperCase()}</span> ` +
+      `${t.symbol} ${fmt$(t.notional)} @ ${t.exec_price} — ${t.rationale}</div>`).join("");
+    return `<div class="entry"><div class="ets">${v.ts}</div>
+      <div class="ev">${v.view}</div>${tr?`<div class="etr">${tr}</div>`:""}</div>`;
+  });
+  el.innerHTML = entries.length ? entries.join("")
+    : `<div class="empty">Plutus hasn't traded yet — the journal begins with the first cycle.</div>`;
+}
+
+function renderMonteCarlo(pricesHist, nav, cfg){
+  const note = document.getElementById("mcNote");
+  // one snapshot per day (the first), daily-rebalance random strategies
+  const daily = []; const seen = new Set();
+  for(const h of pricesHist){ const d=h.ts.slice(0,10);
+    if(!seen.has(d)){ seen.add(d); daily.push(h.prices); } }
+  if(daily.length < 5){ return; }
+  const syms = Object.keys(daily[0]).filter(s=>daily.every(d=>d[s]>0));
+  const cost = 2*(cfg.rules.fee_bps_per_side+cfg.rules.slippage_bps_per_side)/10000;
+  const N = 2000, K = 5, rng = mulberry32(42), finals = [];
+  for(let i=0;i<N;i++){
+    let navv = 1;
+    for(let d=1; d<daily.length; d++){
+      const picks = []; const pool=[...syms];
+      for(let p=0;p<K;p++) picks.push(pool.splice(Math.floor(rng()*pool.length),1)[0]);
+      let r = 0;
+      for(const s of picks) r += (daily[d][s]/daily[d-1][s]-1)/K;
+      navv *= (1+r) * (1-cost*0.5); // rough churn cost per day
+    }
+    finals.push(navv-1);
+  }
+  finals.sort((a,b)=>a-b);
+  const pSeries = seriesFor(nav,"plutus");
+  const pRet = pSeries.length>1 ? pSeries[pSeries.length-1].nav/pSeries[0].nav-1 : 0;
+  const pct = finals.filter(f=>f<pRet).length/N*100;
+  // histogram
+  const bins = 40, lo = finals[0], hi = finals[finals.length-1], w=(hi-lo)/bins||1;
+  const counts = new Array(bins).fill(0);
+  finals.forEach(f=>counts[Math.min(bins-1,Math.floor((f-lo)/w))]++);
+  const labels = counts.map((_,i)=>fmtPct(lo+w*(i+0.5)));
+  const plutusBin = Math.min(bins-1,Math.max(0,Math.floor((pRet-lo)/w)));
+  new Chart(document.getElementById("mcChart"), {
+    type:"bar",
+    data:{ labels, datasets:[{ data:counts,
+      backgroundColor: counts.map((_,i)=> i===plutusBin ? "#B8842C" : css("--hair-strong")),
+      borderWidth:0 }]},
+    options:{ maintainAspectRatio:false, plugins:{ legend:{display:false} },
+      scales:{ x:{ ticks:{ color:css("--muted"), font:{family:"monospace",size:9}, maxTicksLimit:8 },
+        grid:{display:false} },
+        y:{ ticks:{ color:css("--muted"), font:{family:"monospace",size:10} },
+          grid:{ color:css("--hair") } } } }
+  });
+  note.innerHTML = `${N.toLocaleString()} random 5-stock daily-rebalance monkeys, same universe, same window, costs applied. ` +
+    `Plutus's ${fmtPct(pRet)} beats <b>${pct.toFixed(0)}%</b> of monkeys (bronze bar = where Plutus landed).` +
+    (pct>5&&pct<95 ? " That's inside the noise band — indistinguishable from luck." : "");
+}
+
+(async function(){
+  try{
+    const [cfg, portfolio, trades, nav, prices] = await Promise.all([
+      j("data/config.json"), j("data/portfolio.json"), j("data/trades.json"),
+      j("data/nav_history.json"), j("data/prices.json")]);
+    let views = [];
+    try { views = await j("data/views.json"); } catch(e){ /* pre-first-cycle */ }
+
+    const days = new Set(prices.map(p=>p.ts.slice(0,10))).size;
+    const last = prices.length ? prices[prices.length-1].ts : null;
+    document.getElementById("status").innerHTML =
+      `trading day <b>${days}</b> of ${cfg.experiment.max_trading_days}<br>` +
+      (last ? `last cycle <b>${last.replace("T"," ").replace("Z"," UTC")}</b>` : `<b>awaiting first cycle</b>`);
+
+    renderScoreboard(nav);
+    if(nav.length) renderNavChart(nav);
+    renderMetrics(nav, trades);
+    renderHoldings(portfolio, prices);
+    renderJournal(views, trades);
+    renderMonteCarlo(prices, nav, cfg);
+  }catch(e){
+    document.getElementById("status").textContent = "failed to load data: "+e.message;
+  }
+})();
+</script>
+</body>
+</html>

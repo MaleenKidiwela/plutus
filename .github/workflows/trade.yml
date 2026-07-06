@@ -1,0 +1,39 @@
+name: trading-cycle
+
+on:
+  schedule:
+    # ~10:30 ET and ~15:30 ET during EDT, weekdays. GitHub may delay a few minutes.
+    - cron: '30 14,19 * * 1-5'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: trading-cycle
+  cancel-in-progress: false
+
+jobs:
+  trade:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run trading cycle
+        env:
+          FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python scripts/run_cycle.py
+
+      - name: Commit audit trail
+        run: |
+          git config user.name "plutus-engine"
+          git config user.email "plutus-engine@users.noreply.github.com"
+          git add data/
+          git diff --cached --quiet && echo "no changes" && exit 0
+          git commit -m "cycle: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          git push

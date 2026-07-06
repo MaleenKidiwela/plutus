@@ -1,0 +1,573 @@
+<title>Plutus — Experiment Plan</title>
+<style>
+  :root {
+    --paper: #F6F7F9;
+    --panel: #FFFFFF;
+    --panel-2: #EEF1F5;
+    --ink: #191C23;
+    --ink-soft: #474D58;
+    --muted: #6B7280;
+    --hair: #DCE0E7;
+    --hair-strong: #C6CBD4;
+    --accent: #9A6A1C;
+    --accent-ink: #7C5514;
+    --accent-soft: #F1E7D3;
+    --gain: #2C8A57;
+    --loss: #BE4038;
+    --warn: #A9761F;
+    --serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, 'Times New Roman', serif;
+    --sans: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --mono: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace;
+    --wrap: 100%;
+    --col: 720px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #0F1218;
+      --panel: #161A22;
+      --panel-2: #1D222C;
+      --ink: #E8EAEE;
+      --ink-soft: #B0B6C1;
+      --muted: #808896;
+      --hair: #272D38;
+      --hair-strong: #333B48;
+      --accent: #D9AE63;
+      --accent-ink: #E6C588;
+      --accent-soft: #251F14;
+      --gain: #4FB07A;
+      --loss: #E07065;
+      --warn: #D9AE63;
+    }
+  }
+  :root[data-theme="light"] {
+    --paper: #F6F7F9; --panel: #FFFFFF; --panel-2: #EEF1F5;
+    --ink: #191C23; --ink-soft: #474D58; --muted: #6B7280;
+    --hair: #DCE0E7; --hair-strong: #C6CBD4;
+    --accent: #9A6A1C; --accent-ink: #7C5514; --accent-soft: #F1E7D3;
+    --gain: #2C8A57; --loss: #BE4038; --warn: #A9761F;
+  }
+  :root[data-theme="dark"] {
+    --paper: #0F1218; --panel: #161A22; --panel-2: #1D222C;
+    --ink: #E8EAEE; --ink-soft: #B0B6C1; --muted: #808896;
+    --hair: #272D38; --hair-strong: #333B48;
+    --accent: #D9AE63; --accent-ink: #E6C588; --accent-soft: #251F14;
+    --gain: #4FB07A; --loss: #E07065; --warn: #D9AE63;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { width: 100%; }
+  .band { padding: 0 24px; }
+  .col {
+    max-width: var(--col);
+    margin: 0 auto;
+    width: 100%;
+  }
+  .col-wide { max-width: 940px; margin: 0 auto; width: 100%; }
+
+  h1, h2, h3 { font-family: var(--serif); font-weight: 600; text-wrap: balance; line-height: 1.15; }
+  p { margin: 0 0 1em; }
+  a { color: var(--accent-ink); text-underline-offset: 3px; text-decoration-thickness: 1px; }
+  strong { font-weight: 650; }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 14px;
+  }
+
+  /* ---- Masthead ---- */
+  .masthead {
+    border-bottom: 1px solid var(--hair);
+    padding: 64px 24px 52px;
+    background:
+      radial-gradient(120% 140% at 88% -10%, var(--accent-soft) 0%, transparent 46%);
+  }
+  .brand {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: clamp(52px, 11vw, 92px);
+    letter-spacing: -0.02em;
+    line-height: 0.94;
+    margin: 0;
+  }
+  .brand .dot { color: var(--accent); }
+  .lede {
+    font-family: var(--serif);
+    font-size: clamp(19px, 2.4vw, 23px);
+    color: var(--ink-soft);
+    max-width: 30ch;
+    margin: 18px 0 26px;
+    line-height: 1.35;
+  }
+  .credit {
+    display: flex; flex-wrap: wrap; gap: 8px 10px;
+    font-family: var(--mono); font-size: 12.5px; color: var(--muted);
+    align-items: center;
+  }
+  .credit .tag {
+    border: 1px solid var(--hair-strong);
+    border-radius: 2px;
+    padding: 4px 9px;
+    color: var(--ink-soft);
+    background: var(--panel);
+  }
+  .credit .tag b { color: var(--accent-ink); font-weight: 600; }
+
+  /* ---- The brief card ---- */
+  .brief {
+    margin-top: 40px;
+    border: 1px solid var(--hair);
+    background: var(--panel);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .brief-head {
+    font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--muted);
+    padding: 12px 18px; border-bottom: 1px solid var(--hair);
+    background: var(--panel-2);
+    display: flex; justify-content: space-between; gap: 12px;
+  }
+  .brief-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .brief-cell {
+    padding: 16px 18px;
+    border-bottom: 1px solid var(--hair);
+    border-right: 1px solid var(--hair);
+  }
+  .brief-cell:nth-child(2n) { border-right: none; }
+  .brief-cell .k { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 5px; }
+  .brief-cell .v { font-family: var(--serif); font-size: 21px; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .brief-cell .v small { font-family: var(--sans); font-size: 13px; color: var(--ink-soft); }
+  @media (max-width: 560px) {
+    .brief-grid { grid-template-columns: 1fr; }
+    .brief-cell { border-right: none; }
+  }
+
+  /* ---- Sections ---- */
+  section { padding: 56px 0; border-bottom: 1px solid var(--hair); }
+  section.band { padding-left: 24px; padding-right: 24px; }
+  .sec-num {
+    font-family: var(--mono); font-size: 13px; color: var(--accent);
+    letter-spacing: 0.1em;
+  }
+  h2 { font-size: clamp(26px, 4vw, 34px); margin: 6px 0 4px; letter-spacing: -0.01em; }
+  .sec-sub { color: var(--muted); font-size: 15px; margin: 0 0 26px; }
+  h3 { font-size: 20px; margin: 30px 0 8px; }
+  .body { color: var(--ink-soft); }
+  .body strong { color: var(--ink); }
+
+  /* ---- Reality stat row ---- */
+  .stats {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+    margin: 4px 0 30px;
+  }
+  .stat {
+    border: 1px solid var(--hair); border-radius: 4px; padding: 18px 16px;
+    background: var(--panel);
+    border-top: 2px solid var(--warn);
+  }
+  .stat .big { font-family: var(--serif); font-size: 30px; font-variant-numeric: tabular-nums; color: var(--ink); line-height: 1; }
+  .stat .lbl { font-size: 13px; color: var(--ink-soft); margin-top: 9px; line-height: 1.4; }
+  @media (max-width: 620px) { .stats { grid-template-columns: 1fr; } }
+
+  .callout {
+    border-left: 3px solid var(--accent);
+    background: var(--panel);
+    padding: 16px 20px;
+    margin: 26px 0;
+    border-radius: 0 4px 4px 0;
+    font-family: var(--serif);
+    font-size: 18px;
+    color: var(--ink);
+  }
+  .callout .src { display:block; font-family: var(--mono); font-size: 11.5px; color: var(--muted); margin-top: 8px; letter-spacing: 0.02em; }
+
+  /* ---- Table ---- */
+  .table-scroll { overflow-x: auto; margin: 8px 0 6px; border: 1px solid var(--hair); border-radius: 4px; }
+  table { border-collapse: collapse; width: 100%; font-size: 14.5px; }
+  th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--hair); vertical-align: top; }
+  th { font-family: var(--mono); font-size: 11px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); background: var(--panel-2); white-space: nowrap; }
+  td:first-child { color: var(--ink); font-weight: 550; white-space: nowrap; }
+  tr:last-child td { border-bottom: none; }
+  .body-lead td { color: var(--ink-soft); }
+
+  /* ---- Architecture diagram ---- */
+  .diagram {
+    font-family: var(--mono); font-size: 13px; line-height: 1.7;
+    background: var(--panel); border: 1px solid var(--hair); border-radius: 4px;
+    padding: 22px; overflow-x: auto; color: var(--ink-soft);
+    margin: 8px 0 18px;
+  }
+  .diagram b { color: var(--accent-ink); font-weight: 600; }
+  .diagram .accent { color: var(--ink); }
+  .files { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-top: 18px; }
+  .file { border: 1px solid var(--hair); border-radius: 4px; padding: 14px; background: var(--panel); }
+  .file .fn { font-family: var(--mono); font-size: 13px; color: var(--accent-ink); }
+  .file .fd { font-size: 12.5px; color: var(--ink-soft); margin-top: 6px; line-height: 1.45; }
+  @media (max-width: 620px) { .files { grid-template-columns: 1fr; } }
+
+  /* ---- Contestants ---- */
+  .bots { display: grid; grid-template-columns: repeat(2,1fr); gap: 14px; margin: 6px 0 24px; }
+  .bot { border: 1px solid var(--hair); border-radius: 4px; padding: 18px; background: var(--panel); }
+  .bot .name { font-family: var(--serif); font-size: 19px; display: flex; align-items: center; gap: 9px; }
+  .bot .role { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 6px 0 9px; }
+  .bot p { font-size: 14px; color: var(--ink-soft); margin: 0; }
+  .bot.hero { border-color: var(--accent); border-top: 3px solid var(--accent); }
+  .swatch { width: 12px; height: 12px; border-radius: 3px; display: inline-block; flex: none; }
+  @media (max-width: 620px) { .bots { grid-template-columns: 1fr; } }
+
+  /* ---- Metric chips ---- */
+  .metric-group { margin-top: 14px; }
+  .mg-label { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+  .mg-label.solid { color: var(--gain); }
+  .mg-label.soft { color: var(--warn); }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+  .chip {
+    font-family: var(--mono); font-size: 12.5px;
+    border: 1px solid var(--hair-strong); border-radius: 3px; padding: 5px 10px;
+    background: var(--panel); color: var(--ink-soft);
+  }
+  .chip.warnchip { border-style: dashed; }
+
+  /* ---- Universe ---- */
+  .sector { margin-bottom: 20px; }
+  .sector-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 10px; border-bottom: 1px solid var(--hair); padding-bottom: 7px; }
+  .sector-head .st { font-family: var(--serif); font-size: 17px; color: var(--ink); }
+  .sector-head .sc { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.05em; }
+  .tickers { display: flex; flex-wrap: wrap; gap: 7px; }
+  .tk { font-family: var(--mono); font-size: 13px; font-weight: 600; padding: 5px 10px; border-radius: 3px; background: var(--panel-2); color: var(--ink); border: 1px solid var(--hair); letter-spacing: 0.02em; }
+  .tk.etf { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-ink); }
+
+  /* ---- Phases ---- */
+  .phase { display: grid; grid-template-columns: 60px 1fr; gap: 18px; padding: 18px 0; border-bottom: 1px solid var(--hair); }
+  .phase:last-child { border-bottom: none; }
+  .phase .pn { font-family: var(--mono); font-size: 13px; color: var(--accent); padding-top: 3px; letter-spacing: 0.04em; }
+  .phase .pt { font-family: var(--serif); font-size: 19px; color: var(--ink); margin-bottom: 4px; }
+  .phase .pd { font-size: 14.5px; color: var(--ink-soft); }
+
+  /* ---- Open questions ---- */
+  .oq { border: 1px solid var(--hair); border-left: 3px solid var(--accent); border-radius: 0 4px 4px 0; padding: 14px 18px; margin-bottom: 12px; background: var(--panel); }
+  .oq .q { font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+  .oq .d { font-size: 14px; color: var(--ink-soft); }
+
+  ul.clean { list-style: none; padding: 0; margin: 12px 0; }
+  ul.clean li { position: relative; padding-left: 22px; margin-bottom: 10px; color: var(--ink-soft); }
+  ul.clean li::before { content: "→"; position: absolute; left: 0; color: var(--accent); font-family: var(--mono); }
+
+  /* ---- Footer ---- */
+  footer { padding: 44px 24px 60px; }
+  .disclaimer {
+    border: 1px dashed var(--hair-strong); border-radius: 4px; padding: 18px 20px;
+    font-size: 13px; color: var(--muted); background: var(--panel);
+  }
+  .disclaimer b { color: var(--ink-soft); }
+  .sources { margin-top: 26px; font-size: 13px; }
+  .sources h4 { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin: 0 0 12px; }
+  .sources ol { margin: 0; padding-left: 20px; color: var(--ink-soft); }
+  .sources li { margin-bottom: 7px; line-height: 1.45; }
+  .sources code { font-family: var(--mono); font-size: 12px; color: var(--accent-ink); }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal { opacity: 0; transform: translateY(10px); animation: rise 0.6s ease forwards; }
+    @keyframes rise { to { opacity: 1; transform: none; } }
+  }
+</style>
+
+<div class="wrap">
+
+  <!-- MASTHEAD -->
+  <header class="masthead">
+    <div class="col-wide reveal">
+      <p class="eyebrow">Experiment plan · v1 draft · 2026</p>
+      <h1 class="brand">Plutus<span class="dot">.</span></h1>
+      <p class="lede">Can a language model trade — and more honestly, how does it decide?</p>
+      <div class="credit">
+        <span class="tag">Persona by <b>Fable</b></span>
+        <span class="tag">Decisions by <b>Opus&nbsp;4.8</b></span>
+        <span class="tag">Runs <b>2×/day</b></span>
+        <span class="tag">Tracked <b>~1 month</b></span>
+      </div>
+
+      <div class="brief">
+        <div class="brief-head"><span>The brief</span><span>paper-traded · simulated fills</span></div>
+        <div class="brief-grid">
+          <div class="brief-cell"><div class="k">Capital / agent</div><div class="v">$1,000</div></div>
+          <div class="brief-cell"><div class="k">Contestants</div><div class="v">4 <small>+ Monte Carlo</small></div></div>
+          <div class="brief-cell"><div class="k">Cadence</div><div class="v">Twice daily <small>~40 decisions</small></div></div>
+          <div class="brief-cell"><div class="k">Universe</div><div class="v">~28 names <small>5 sectors + ETFs</small></div></div>
+          <div class="brief-cell"><div class="k">Host</div><div class="v">GitHub&nbsp;Pages <small>fully serverless</small></div></div>
+          <div class="brief-cell"><div class="k">Benchmark</div><div class="v">VOO <small>buy &amp; hold</small></div></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 1. PREMISE -->
+  <section class="band">
+    <div class="col">
+      <p class="sec-num">01</p>
+      <h2>Set expectations before we set up</h2>
+      <p class="sec-sub">The research came back with one loud, consistent message. It doesn't kill the project — it decides how we frame it.</p>
+
+      <div class="stats">
+        <div class="stat"><div class="big">65–79%</div><div class="lbl">of professional active funds trail the S&amp;P 500 over a single year (SPIVA).</div></div>
+        <div class="stat"><div class="big">Most</div><div class="lbl">frontier LLMs failed to beat buy-and-hold in STOCKBENCH (Oct 2025) — incl. GPT-5, Claude&nbsp;4, o3.</div></div>
+        <div class="stat"><div class="big">n≈20–40</div><div class="lbl">decisions in a month — far below the ~30 min / 100+ needed to tell skill from luck.</div></div>
+      </div>
+
+      <p class="body"><strong>Beating the market over one month is close to a coin flip</strong> — even for professionals with vastly more resources. The newest LLM-specific benchmark found that being good at financial Q&amp;A does <em>not</em> translate into good trading. And a single Sharpe or return figure over ~20 trading days has enormous error bars.</p>
+
+      <div class="callout">
+        So Plutus is framed as <strong>an experiment in how an LLM makes and justifies decisions</strong> — not "an AI that beats the market." The headline output isn't the return; it's Plutus's reasoning log plus a rigorous, honest head-to-head against baselines.
+        <span class="src">Sources: S&amp;P Dow Jones SPIVA · STOCKBENCH arXiv:2510.02209 · Harvey &amp; Liu, "Backtesting"</span>
+      </div>
+
+      <p class="body">Concretely, this shapes three things: we run <strong>multiple bots side-by-side</strong> (a lone number means nothing), we <strong>pre-register the rules</strong> before day one, and every metric on the dashboard is <strong>labelled by how much we can trust it</strong> at this sample size.</p>
+    </div>
+  </section>
+
+  <!-- 2. DECISIONS -->
+  <section class="band">
+    <div class="col">
+      <p class="sec-num">02</p>
+      <h2>Your questions, answered</h2>
+      <p class="sec-sub">Verdicts on the design calls in your brief.</p>
+      <div class="table-scroll">
+        <table class="body-lead">
+          <thead><tr><th>Question</th><th>Verdict</th></tr></thead>
+          <tbody>
+            <tr><td>Twice a day — good?</td><td>Keep it — it makes the dashboard feel alive. But it adds noise, not signal (correlated observations, one market regime). Don't treat 2×/day as "more data."</td></tr>
+            <tr><td>Claude routine vs. cron?</td><td><strong>GitHub Actions cron as the scheduler</strong>, calling Claude for the decision. Pure Claude Routines have a 1-hour minimum, default to pushing only <code style="font-family:var(--mono);font-size:12px">claude/*</code> branches, and a daily run cap. The hybrid keeps timing deterministic.</td></tr>
+            <tr><td>"Made by Fable, run on Opus 4.8"?</td><td><strong>Fable authors Plutus's persona &amp; trading charter</strong> (its risk philosophy and rules). At each cycle, <strong>Opus 4.8 executes</strong> against that charter. Clean split, and it shows well on the site.</td></tr>
+            <tr><td>Compare to existing bots?</td><td>Yes — the most valuable part. Four contestants under identical conditions, plus a Monte-Carlo "monkey" test. See §04.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. ARCHITECTURE -->
+  <section class="band">
+    <div class="col">
+      <p class="sec-num">03</p>
+      <h2>Architecture — serverless &amp; free</h2>
+      <p class="sec-sub">The GitHub repo is the database. No backend, no hosting bill, and the commit history becomes a tamper-evident audit trail.</p>
+
+      <div class="diagram">
+<span class="accent">┌─ GitHub Actions cron ── twice daily ──────────────────────────┐</span>
+  1. Fetch prices  <b>server-side</b>, API key in Actions secrets
+  2. Call <b>Opus 4.8</b> with Fable's charter + holdings + prices
+  3. Agent returns <b>structured orders</b> + written rationale
+  4. Run the 3 baseline bots on the same prices
+  5. Update JSON · append trade log + NAV point
+  6. <b>git commit</b> to main   ← immutable, timestamped record
+<span class="accent">└───────────────────────────────┬───────────────────────────────┘</span>
+                                │  GitHub Pages rebuilds
+<span class="accent">┌───────────────────────────────▼───────────────────────────────┐</span>
+  <b>Static dashboard</b> — HTML + Chart.js (CDN, no build step)
+  fetch() the JSON → equity curve · holdings · reasoning log
+<span class="accent">└────────────────────────────────────────────────────────────────┘</span>
+      </div>
+
+      <div class="files">
+        <div class="file"><div class="fn">portfolio.json</div><div class="fd">Cash + current holdings, per bot. The live snapshot.</div></div>
+        <div class="file"><div class="fn">trades.json</div><div class="fd">Append-only log. Each entry: price, source, UTC timestamp, and Plutus's rationale.</div></div>
+        <div class="file"><div class="fn">nav_history.json</div><div class="fd">One NAV point per run, per bot → drives the equity curve.</div></div>
+      </div>
+
+      <ul class="clean">
+        <li><strong>Market data:</strong> Finnhub (60 req/min free) or Twelve Data (8/min, 800/day), fetched in the Action so the key stays secret and every run has one canonical, logged price. Avoid Alpha Vantage (now 25 req/day).</li>
+        <li><strong>Charting:</strong> Chart.js from CDN — simplest for a no-build static page. (Recharts needs React; skipped.)</li>
+        <li><strong>Safety valve:</strong> if a price fetch fails, log and skip trading rather than commit a corrupt NAV — the month's curve stays trustworthy.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 4. CONTESTANTS -->
+  <section class="band">
+    <div class="col">
+      <p class="sec-num">04</p>
+      <h2>The four contestants</h2>
+      <p class="sec-sub">Everything held constant except the decision logic — same $1,000, same universe, same cadence, same fee model. Only the brain differs.</p>
+
+      <div class="bots">
+        <div class="bot hero">
+          <div class="name"><span class="swatch" style="background:var(--accent)"></span>Plutus</div>
+          <div class="role">LLM agent — Opus 4.8 / persona by Fable</div>
+          <p>Researches the live web each cycle, may trade any US-listed stock or ETF (watchlist is a convenience, not a cage), and must justify every trade in writing. Goal: make money.</p>
+        </div>
+        <div class="bot">
+          <div class="name"><span class="swatch" style="background:var(--muted)"></span>VOO Buy &amp; Hold</div>
+          <div class="role">Passive benchmark</div>
+          <p>Buys the market on day one and never trades. The bar everything is measured against.</p>
+        </div>
+        <div class="bot">
+          <div class="name"><span class="swatch" style="background:var(--gain)"></span>Momentum Bot</div>
+          <div class="role">Mechanical rule</div>
+          <p>Ranks the universe by trailing return, holds the top names, rebalances on the same cadence.</p>
+        </div>
+        <div class="bot">
+          <div class="name"><span class="swatch" style="background:var(--loss)"></span>Random "Monkey"</div>
+          <div class="role">Chance baseline</div>
+          <p>Picks names at random, matched to Plutus's position count and holding period. The luck control.</p>
+        </div>
+      </div>
+
+      <h3>Metrics — split by how much we can trust them</h3>
+      <p class="body">All derived from one NAV series per bot, so they're consistent and reproducible.</p>
+
+      <div class="metric-group">
+        <div class="mg-label solid">● Reliable-ish over a month</div>
+        <div class="chips">
+          <span class="chip">Total return</span>
+          <span class="chip">Excess vs. VOO</span>
+          <span class="chip">Max drawdown</span>
+          <span class="chip">Turnover</span>
+          <span class="chip">Cumulative NAV curve</span>
+        </div>
+      </div>
+      <div class="metric-group">
+        <div class="mg-label soft">◇ Directional only — small-sample warning</div>
+        <div class="chips">
+          <span class="chip warnchip">Sharpe</span>
+          <span class="chip warnchip">Sortino</span>
+          <span class="chip warnchip">Calmar</span>
+          <span class="chip warnchip">Volatility</span>
+          <span class="chip warnchip">Win rate</span>
+        </div>
+      </div>
+      <p class="body" style="margin-top:18px">The hero visual is a single <strong>growth-of-$1,000 line chart</strong> overlaying all four bots on the same axis — the most honest read of a short experiment.</p>
+    </div>
+  </section>
+
+  <!-- 5. RIGOR -->
+  <section class="band">
+    <div class="col">
+      <p class="sec-num">05</p>
+      <h2>What makes it credible</h2>
+      <p class="sec-sub">Two moves do most of the work of separating a real experiment from a fishing expedition.</p>
+
+      <h3>Pre-registration</h3>
+      <p class="body">Freeze the full rule set in a timestamped commit <strong>before day one</strong>: the universe, starting capital, cadence, long-only / no-leverage / no-shorting, per-position cap (~15%), cash buffer (~5–10%), and the exact fee + slippage model — applied identically to every bot. Then commit to reporting the outcome whether Plutus wins or loses.</p>
+
+      <h3>The Monte-Carlo "monkey" test</h3>
+      <p class="body">A single random bot is one draw. Instead we simulate <strong>~5,000 random trade sequences</strong> matched to Plutus's trade count and holding period, then plot the distribution of returns. Plutus only "beats random" if it lands in the tail — and the dashboard states the percentile plainly: <em>"Plutus beat X% of random monkeys."</em> This is the honest way to ask <em>skill, or luck?</em></p>
+
+      <div class="callout">
+        Guardrails, applied to all bots: long-only, no leverage, no shorting, a fixed liquid universe snapshotted at the start, per-position and per-trade caps, and a cash buffer. Fractional shares allowed (it's simulated), so $1,000 can spread across several names.
+        <span class="src">Sources: Bailey &amp; López de Prado (Probabilistic Sharpe / MinTRL) · "Seven Sins of Quantitative Investing" · RobotWealth random-baseline method</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. UNIVERSE -->
+  <section class="band">
+    <div class="col">
+      <p class="sec-num">06</p>
+      <h2>The universe</h2>
+      <p class="sec-sub">A fixed, pre-registered list across the sectors you named — AI, tech, chips, oil &amp; gas — plus broad-market ETFs. ~28 liquid names. A starting point to tune, not a final answer.</p>
+
+      <div class="sector">
+        <div class="sector-head"><span class="st">Broad market ETFs</span><span class="sc">/ VOO also serves as the benchmark</span></div>
+        <div class="tickers">
+          <span class="tk etf">VOO</span><span class="tk etf">QQQ</span>
+        </div>
+      </div>
+      <div class="sector">
+        <div class="sector-head"><span class="st">AI &amp; software</span><span class="sc">/ 6</span></div>
+        <div class="tickers">
+          <span class="tk">MSFT</span><span class="tk">GOOGL</span><span class="tk">META</span><span class="tk">PLTR</span><span class="tk">CRM</span><span class="tk">NOW</span>
+        </div>
+      </div>
+      <div class="sector">
+        <div class="sector-head"><span class="st">Consumer tech &amp; platforms</span><span class="sc">/ 4</span></div>
+        <div class="tickers">
+          <span class="tk">AAPL</span><span class="tk">AMZN</span><span class="tk">TSLA</span><span class="tk">NFLX</span>
+        </div>
+      </div>
+      <div class="sector">
+        <div class="sector-head"><span class="st">Semiconductors &amp; chips</span><span class="sc">/ 9</span></div>
+        <div class="tickers">
+          <span class="tk">NVDA</span><span class="tk">AMD</span><span class="tk">AVGO</span><span class="tk">TSM</span><span class="tk">MU</span><span class="tk">ASML</span><span class="tk">QCOM</span><span class="tk">ARM</span><span class="tk">INTC</span>
+        </div>
+      </div>
+      <div class="sector">
+        <div class="sector-head"><span class="st">Oil, gas &amp; energy</span><span class="sc">/ 6</span></div>
+        <div class="tickers">
+          <span class="tk">XOM</span><span class="tk">CVX</span><span class="tk">COP</span><span class="tk">SLB</span><span class="tk">OXY</span><span class="tk">EOG</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. PHASES -->
+  <section class="band">
+    <div class="col">
+      <p class="sec-num">07</p>
+      <h2>Build sequence</h2>
+      <p class="sec-sub">Each phase leaves something you can look at and check before the next.</p>
+
+      <div class="phase"><div class="pn">P0</div><div><div class="pt">Charter</div><div class="pd">Fable writes Plutus's persona, trading philosophy, and rules. Pre-register the whole rule set in a timestamped commit.</div></div></div>
+      <div class="phase"><div class="pn">P1</div><div><div class="pt">Skeleton</div><div class="pd">Repo, GitHub Pages, JSON schema, seed state ($1,000 cash, empty holdings), dashboard rendering dummy data.</div></div></div>
+      <div class="phase"><div class="pn">P2</div><div><div class="pt">Data + scheduler</div><div class="pd">GitHub Actions cron + Finnhub price fetch, committing prices. Confirm the twice-daily run fires reliably.</div></div></div>
+      <div class="phase"><div class="pn">P3</div><div><div class="pt">The agent</div><div class="pd">Wire Opus 4.8 into the Action — structured buy/sell orders plus a rationale, written into the trade log.</div></div></div>
+      <div class="phase"><div class="pn">P4</div><div><div class="pt">Baselines</div><div class="pd">Add VOO, momentum, and random bots to the same loop on identical prices and fees.</div></div></div>
+      <div class="phase"><div class="pn">P5</div><div><div class="pt">Analytics</div><div class="pd">Metrics, the Monte-Carlo panel, the reasoning-log UI, and the small-sample caveat blocks.</div></div></div>
+      <div class="phase"><div class="pn">P6</div><div><div class="pt">Run the month</div><div class="pd">Let it run untouched, then write up what happened — win or lose.</div></div></div>
+    </div>
+  </section>
+
+  <!-- 8. OPEN QUESTIONS -->
+  <section class="band">
+    <div class="col">
+      <p class="sec-num">08</p>
+      <h2>Decided</h2>
+      <p class="sec-sub">The open questions from v1, now locked and implemented.</p>
+
+      <div class="oq"><div class="q">Run times — <code style="font-family:var(--mono);font-size:12.5px">30 14,19 * * 1-5</code> UTC</div><div class="d">~10:30am and ~3:30pm ET on weekdays. GitHub may delay a few minutes under load; the exact fetch timestamp is logged either way.</div></div>
+      <div class="oq"><div class="q">Fee &amp; slippage — 5 bps + 5 bps per side</div><div class="d">Applied identically to every bot, so churn is penalized fairly. Visible in the very first dry run: VOO's NAV dropped to $999.80 on its one buy.</div></div>
+      <div class="oq"><div class="q">Opus invocation — direct Anthropic API</div><div class="d">Called inside the Action with a zero-dependency HTTP client. Two attempts, then the bot holds. Its <em>market_view</em> is journaled every cycle, traded or not.</div></div>
+      <div class="oq"><div class="q">Universe — 27 names, frozen</div><div class="d">The list in §06 as built, pre-registered in <code style="font-family:var(--mono);font-size:12.5px">data/config.json</code>. Data: Finnhub primary, Yahoo keyless fallback (Stooq is now behind an anti-bot wall).</div></div>
+      <div class="oq"><div class="q">Plutus roams; baselines stay caged</div><div class="d">Per the owner's brief, Plutus may trade <em>any</em> US-listed name (validated by a live quote at order time) and researches the web (server-side search, ≤6 uses/cycle) before deciding. The fixed universe still binds momentum and random — an accepted asymmetry: Plutus's goal is to make money, and the VOO benchmark is unaffected.</div></div>
+      <div class="oq"><div class="q">Auto-stop — 21 trading days</div><div class="d">The engine freezes trading after the pre-registered window; NAV keeps being recorded. The experiment can't quietly run long because it happens to be winning.</div></div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="col">
+      <div class="disclaimer">
+        <b>Not investment advice.</b> Plutus trades imaginary money with simulated fills. A one-month, ~20–40-decision run is a single noisy draw from a distribution — a random bot could plausibly match or beat it over this window. Past performance does not indicate future results. This is a demonstration of process, not evidence of edge.
+      </div>
+
+      <div class="sources">
+        <h4>Key sources</h4>
+        <ol>
+          <li>STOCKBENCH: LLM trading agents vs. buy-and-hold — <code>arXiv:2510.02209</code> (Oct 2025)</li>
+          <li>S&amp;P Dow Jones Indices — SPIVA U.S. Scorecard (active vs. passive base rates)</li>
+          <li>Harvey &amp; Liu — "Backtesting" (Sharpe error scales with 1/√N)</li>
+          <li>Bailey &amp; López de Prado — Probabilistic Sharpe Ratio &amp; Minimum Track Record Length</li>
+          <li>"The Seven Sins of Quantitative Investing" — look-ahead, survivorship, data-snooping, storytelling</li>
+          <li>RobotWealth — benchmarking backtests against random strategies (the monkey test)</li>
+          <li>Alpaca paper-trading API &amp; MCP · Finnhub / Twelve Data rate limits · Claude Code Routines docs · Chart.js</li>
+        </ol>
+      </div>
+    </div>
+  </footer>
+
+</div>
