@@ -297,5 +297,31 @@
   "notional": 120.0,
   "rationale": "Small oversold-bounce entry in liquid semis after last week's ~11% panic - the exact right-horizon setup my playbook endorses, not momentum-chasing - with a fresh dated catalyst (Broadcom-Apple 5-yr custom-silicon deal, 2026-07-06) and AI-capex thesis intact. Sized small (~12% NAV). Invalidation: the bounce fails and semis put in a lower low (SMH back through last week's trough), signaling the rout wasn't a one-off panic.",
   "source": "finnhub"
+ },
+ {
+  "ts": "2026-07-06T19:39:54Z",
+  "bot": "copycat",
+  "action": "buy",
+  "symbol": "INTC",
+  "qty": 1.622697,
+  "price": 123.19,
+  "exec_price": 123.2516,
+  "fee": 0.1,
+  "notional": 200.0,
+  "rationale": "New Pelosi disclosure: 200 INTC $50-strike calls expiring 2027-03-19, disclosed value band $1M-$5M (her largest new bet). Transaction date 2026-05-29, disclosed/filed 2026-06-23 \u2014 the first new PTR since the 2026-01-23 filing this bot already mirrored. Mirrored shares-only in the underlying INTC, sized to the 20% cap as the larger of the two new bands (midpoint ~$3M).",
+  "source": "finnhub"
+ },
+ {
+  "ts": "2026-07-06T19:39:54Z",
+  "bot": "copycat",
+  "action": "buy",
+  "symbol": "UBER",
+  "qty": 1.796171,
+  "price": 72.34,
+  "exec_price": 72.3762,
+  "fee": 0.065,
+  "notional": 130.0,
+  "rationale": "Same new Pelosi disclosure: 200 UBER $50-strike calls expiring 2027-03-19, disclosed value band $500K-$1M. Transaction date 2026-05-29, disclosed/filed 2026-06-23. Mirrored shares-only in underlying UBER, weighted below INTC to reflect its smaller disclosed band (midpoint ~$750K).",
+  "source": "finnhub"
  }
 ]
