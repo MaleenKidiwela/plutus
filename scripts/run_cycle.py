@@ -205,14 +205,19 @@ def rebalance_to_targets(bot_state, targets, prices, rules):
 
 # ---------- Bots ----------
 
-def bot_voo(bot_state, prices, rules, first_cycle, **_):
-    if first_cycle and "VOO" in prices and not bot_state["positions"]:
-        nav = nav_of(bot_state, prices)
-        budget = bot_state["cash"] * (1 - rules["fee_bps_per_side"] / 10000.0) - \
-            rules["min_cash_buffer_pct_nav"] * nav
-        return [{"action": "buy", "symbol": "VOO", "notional": round(budget, 2),
-                 "rationale": "Buy the market once, then do nothing for a month."}]
-    return []
+def bot_voo(bot_state, prices, rules, **_):
+    """Benchmark: fully deployed in VOO, then does nothing. Tops up until
+    cash is down to the buffer (also self-heals partial first fills)."""
+    if "VOO" not in prices:
+        return []
+    nav = nav_of(bot_state, prices)
+    costs = (rules["fee_bps_per_side"] + rules["slippage_bps_per_side"]) / 10000.0
+    budget = (bot_state["cash"] - rules["min_cash_buffer_pct_nav"] * nav) \
+        * (1 - costs)
+    if budget < 1.0:
+        return []
+    return [{"action": "buy", "symbol": "VOO", "notional": round(budget, 2),
+             "rationale": "Benchmark: hold the market, do nothing else."}]
 
 
 def bot_momentum(bot_state, prices, rules, history, first_run_today, cfg,
@@ -466,6 +471,11 @@ def main():
     }
     for bot, decide in bots.items():
         state = portfolio["bots"][bot]
+        # The buy-and-hold benchmark IS one position by definition —
+        # exempt from the per-position cap (amendment 2026-07-06, cycle 2:
+        # cycle 1 wrongly clamped the benchmark to 20%).
+        rules = cfg["rules"] if bot != "voo" else \
+            {**cfg["rules"], "max_position_pct_nav": 1.0}
         if experiment_over:
             orders = []
         else:
