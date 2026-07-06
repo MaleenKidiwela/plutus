@@ -296,6 +296,21 @@ def parse_decision(blocks):
 
 
 DECISION_FILE = os.path.join(ROOT, "plutus_decision.json")
+COPYCAT_FILE = os.path.join(ROOT, "copycat_decision.json")
+
+
+def bot_copycat(bot_state, prices, rules, **_):
+    """Mirrors a publicly claimed 'best portfolio'. The routine agent checks
+    the copy target's latest disclosures and writes orders here only when the
+    target's disclosed holdings changed. No file → hold (the usual case)."""
+    if os.path.exists(COPYCAT_FILE):
+        with open(COPYCAT_FILE) as f:
+            decision = json.load(f)
+        if not DRY_RUN:
+            os.remove(COPYCAT_FILE)
+        orders = decision.get("orders", [])
+        return orders if isinstance(orders, list) else []
+    return []
 
 
 def bot_plutus(bot_state, prices, rules, history, trades_log, ts, cfg, **_):
@@ -407,9 +422,11 @@ def main():
     history = load("prices.json")
     rules = cfg["rules"]
     universe = sorted(sum(cfg["universe"].values(), []))
-    # Plutus may hold names outside the core watchlist — keep pricing them.
-    extras = sorted(s for s in portfolio["bots"]["plutus"]["positions"]
-                    if s not in universe)
+    # Plutus and the copycat may hold names outside the core watchlist —
+    # keep pricing whatever they hold.
+    open_bots = ("plutus", "copycat")
+    held = {s for b in open_bots for s in portfolio["bots"][b]["positions"]}
+    extras = sorted(held - set(universe))
 
     ts = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     today = ts[:10]
@@ -444,6 +461,7 @@ def main():
         "voo": bot_voo,
         "momentum": bot_momentum,
         "random": bot_random,
+        "copycat": bot_copycat,
         "plutus": bot_plutus,
     }
     for bot, decide in bots.items():
@@ -456,7 +474,7 @@ def main():
                 trades_log=trades, ts=ts, cfg=cfg, universe=universe,
                 first_cycle=first_cycle, first_run_today=first_run_today,
             )
-            if bot == "plutus" and orders:
+            if bot in open_bots and orders:
                 # Open universe: quote any symbols we don't have yet.
                 unknown = sorted({
                     str(o.get("symbol", "")).upper() for o in orders
@@ -469,8 +487,8 @@ def main():
                     prices.update(fetched)  # also lands in today's snapshot
                     rejected = set(unknown) - set(fetched)
                     if rejected:
-                        log(f"plutus: no quote for {sorted(rejected)} — rejected")
-            allowed = set(prices) if bot == "plutus" else universe
+                        log(f"{bot}: no quote for {sorted(rejected)} — rejected")
+            allowed = set(prices) if bot in open_bots else universe
             orders = validate_orders(orders, state, prices, rules, allowed)
         filled = sum(
             execute(bot, state, o, prices, rules, ts, trades, source)

@@ -4,6 +4,7 @@
     "plutus":   {"cash": 1000.0, "positions": {}},
     "voo":      {"cash": 1000.0, "positions": {}},
     "momentum": {"cash": 1000.0, "positions": {}},
-    "random":   {"cash": 1000.0, "positions": {}}
+    "random":   {"cash": 1000.0, "positions": {}},
+    "copycat":  {"cash": 1000.0, "positions": {}}
   }
 }

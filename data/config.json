@@ -46,6 +46,13 @@
       "positions": 5,
       "seed": "UTC date YYYYMMDD as integer",
       "rebalance": "first run of each trading day"
+    },
+    "copycat": {
+      "label": "Copycat",
+      "kind": "copy-trading",
+      "target": "Nancy Pelosi's disclosed portfolio (STOCK Act PTRs via quiverquant.com / capitoltrades.com) — the most-copied 'best portfolio online' claim, as marketed by Autopilot ($400M mirrors it)",
+      "method": "On first cycle, mirror the target's currently disclosed stock holdings (proportional weights within position caps, shares only — no options). Afterwards trade only when a NEW disclosure appears; each order's rationale must cite the disclosure with both transaction date and disclosure date so staleness is on the record.",
+      "note": "Tests whether a famous claimed-best portfolio performs when copied under the exact conditions retail copiers face: public-disclosure lag, shares-only, small account. Target swappable here before day 1."
     }
   },
   "universe_note": "The fixed universe below binds the momentum and random baselines (they need a defined candidate pool) and defines the priced watchlist. Plutus may trade beyond it — a fairness asymmetry accepted by design: the goal set for Plutus is to make money.",

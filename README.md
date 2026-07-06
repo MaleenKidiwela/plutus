@@ -17,6 +17,7 @@ baselines under identical rules.
 | **VOO Buy & Hold** | Buys the market on day one. Never trades again. |
 | **Momentum Bot** | Ranks the universe by trailing return, holds the top 5, rebalances daily. |
 | **Random Monkey** | Picks 5 names at random (seeded by date), rebalances daily. The luck control. |
+| **Copycat** | Mirrors a famous claimed-best portfolio (default: the Pelosi tracker — Autopilot's $400M flagship) under real copier conditions: public-disclosure lag, shares only. Tests whether "the best portfolio online" survives being copied. |
 
 All bots share the same $1,000, cadence, hard rules, and costs (5 bps fee +
 5 bps slippage per side). The 27-name universe binds the mechanical baselines
