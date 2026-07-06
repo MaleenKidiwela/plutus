@@ -258,5 +258,44 @@
   "notional": 749.16,
   "rationale": "Benchmark: hold the market, do nothing else.",
   "source": "yahoo"
+ },
+ {
+  "ts": "2026-07-06T14:37:43Z",
+  "bot": "plutus",
+  "action": "buy",
+  "symbol": "QQQ",
+  "qty": 0.041361,
+  "price": 724.95,
+  "exec_price": 725.3125,
+  "fee": 0.015,
+  "notional": 30.0,
+  "rationale": "Top up Nasdaq-100 growth beta now that semis/tech have stopped falling and VIX collapsed to 15.8 - the volatility that made me deliberately underweight QQQ in cycle 1 has resolved. Invalidation: a second leg down in semis (AVGO/memory story worsening) or VIX breaking back above ~22 would argue for trimming this first.",
+  "source": "finnhub"
+ },
+ {
+  "ts": "2026-07-06T14:37:43Z",
+  "bot": "plutus",
+  "action": "buy",
+  "symbol": "IWM",
+  "qty": 0.451038,
+  "price": 299.16,
+  "exec_price": 299.3096,
+  "fee": 0.0675,
+  "notional": 135.0,
+  "rationale": "New small-cap (Russell 2000) sleeve for genuine breadth/de-concentration away from my mega-cap-heavy VOO/QQQ, consistent with my equal-weight RSP tilt; small-caps benefit from today's falling oil and subdued VIX. Invalidation: if breadth deteriorates and leadership re-narrows to mega-cap only (small-caps materially lagging), the de-concentration case weakens and I'd cut this.",
+  "source": "finnhub"
+ },
+ {
+  "ts": "2026-07-06T14:37:43Z",
+  "bot": "plutus",
+  "action": "buy",
+  "symbol": "SMH",
+  "qty": 0.194632,
+  "price": 616.24,
+  "exec_price": 616.5481,
+  "fee": 0.06,
+  "notional": 120.0,
+  "rationale": "Small oversold-bounce entry in liquid semis after last week's ~11% panic - the exact right-horizon setup my playbook endorses, not momentum-chasing - with a fresh dated catalyst (Broadcom-Apple 5-yr custom-silicon deal, 2026-07-06) and AI-capex thesis intact. Sized small (~12% NAV). Invalidation: the bounce fails and semis put in a lower low (SMH back through last week's trough), signaling the rout wasn't a one-off panic.",
+  "source": "finnhub"
  }
 ]
