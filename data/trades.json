@@ -193,5 +193,57 @@
   "notional": 150.0,
   "rationale": "Nasdaq-100 growth beta, kept the smallest of the three precisely because tech/semis are the volatility source right now \u2014 I want participation in the AI-capex engine but underweight it here. Invalidation: a second leg down in semis (Broadcom/memory story worsening) would argue for trimming this before the broader ETFs.",
   "source": "finnhub"
+ },
+ {
+  "ts": "2026-07-06T02:42:58Z",
+  "bot": "maleen",
+  "action": "buy",
+  "symbol": "NVDA",
+  "qty": 0.973747,
+  "price": 194.83,
+  "exec_price": 194.9274,
+  "fee": 0.0949,
+  "notional": 189.81,
+  "rationale": "Owner's pre-registered pick (200:1000 weight), buy-and-hold.",
+  "source": "yahoo"
+ },
+ {
+  "ts": "2026-07-06T02:42:58Z",
+  "bot": "maleen",
+  "action": "buy",
+  "symbol": "RKLB",
+  "qty": 1.888464,
+  "price": 100.46,
+  "exec_price": 100.5102,
+  "fee": 0.0949,
+  "notional": 189.81,
+  "rationale": "Owner's pre-registered pick (200:1000 weight), buy-and-hold.",
+  "source": "yahoo"
+ },
+ {
+  "ts": "2026-07-06T02:42:58Z",
+  "bot": "maleen",
+  "action": "buy",
+  "symbol": "TSM",
+  "qty": 0.436971,
+  "price": 434.16,
+  "exec_price": 434.3771,
+  "fee": 0.0949,
+  "notional": 189.81,
+  "rationale": "Owner's pre-registered pick (200:1000 weight), buy-and-hold.",
+  "source": "yahoo"
+ },
+ {
+  "ts": "2026-07-06T02:42:58Z",
+  "bot": "maleen",
+  "action": "buy",
+  "symbol": "VOO",
+  "qty": 0.554042,
+  "price": 684.84,
+  "exec_price": 685.1824,
+  "fee": 0.1898,
+  "notional": 379.62,
+  "rationale": "Owner's pre-registered pick (400:1000 weight), buy-and-hold.",
+  "source": "yahoo"
  }
 ]
