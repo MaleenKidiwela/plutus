@@ -272,12 +272,17 @@ function renderMetrics(nav, trades){
     tbl(soft, ["Bot","Sharpe ◇","Sortino ◇","Vol ◇","Win rate ◇"]);
 }
 
-function renderHoldings(portfolio, prices){
+function renderHoldings(portfolio, prices, trades){
   const last = prices.length ? prices[prices.length-1].prices : {};
+  // Symbols not yet in a snapshot (e.g. bought between cycles) are
+  // valued at their most recent trade price until the next cycle.
+  const tradePx = {};
+  trades.forEach(t => { tradePx[t.symbol] = t.exec_price; });
+  const px = sym => last[sym] ?? tradePx[sym] ?? 0;
   document.getElementById("holdings").innerHTML = Object.entries(BOTS).map(([k,b])=>{
     const st = portfolio.bots[k];
     const rows = Object.entries(st.positions)
-      .map(([sym,qty])=>({sym, qty, val:qty*(last[sym]||0)}))
+      .map(([sym,qty])=>({sym, qty, val:qty*px(sym)}))
       .sort((a,b2)=>b2.val-a.val)
       .map(p=>[p.sym, p.qty.toFixed(4), fmt$(p.val)]);
     const body = rows.length ? tbl(rows,["Symbol","Qty","Value"])
@@ -368,7 +373,7 @@ function renderMonteCarlo(pricesHist, nav, cfg){
     renderScoreboard(nav);
     if(nav.length) renderNavChart(nav);
     renderMetrics(nav, trades);
-    renderHoldings(portfolio, prices);
+    renderHoldings(portfolio, prices, trades);
     renderJournal(views, trades);
     renderMonteCarlo(prices, nav, cfg);
   }catch(e){
