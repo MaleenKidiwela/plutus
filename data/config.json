@@ -47,6 +47,13 @@
       "seed": "UTC date YYYYMMDD as integer",
       "rebalance": "first run of each trading day"
     },
+    "maleen": {
+      "label": "Maleen",
+      "kind": "human",
+      "picks": {"NVDA": 200, "RKLB": 200, "TSM": 200, "VOO": 400},
+      "method": "The owner's own picks, pre-registered 2026-07-06 (joined at cycle 2), deployed proportionally within the cash buffer, then buy-and-hold for the month.",
+      "note": "Human benchmark — cap-exempt like the index benchmark, since fixed personal weights are what they are. Takes the semiconductor exposure (NVDA/TSM) that Plutus declined in cycle 1, plus RKLB."
+    },
     "copycat": {
       "label": "Copycat",
       "kind": "copy-trading",

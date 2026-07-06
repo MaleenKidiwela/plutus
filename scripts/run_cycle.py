@@ -304,6 +304,27 @@ DECISION_FILE = os.path.join(ROOT, "plutus_decision.json")
 COPYCAT_FILE = os.path.join(ROOT, "copycat_decision.json")
 
 
+def bot_maleen(bot_state, prices, rules, cfg, **_):
+    """The owner's own picks: pre-registered weights, buy-and-hold.
+    Tops up toward target weights until deployed, then never trades."""
+    picks = cfg["bots"]["maleen"]["picks"]
+    total = sum(picks.values())
+    nav = nav_of(bot_state, prices)
+    costs = (rules["fee_bps_per_side"] + rules["slippage_bps_per_side"]) / 10000.0
+    budget = nav * (1 - rules["min_cash_buffer_pct_nav"]) * (1 - costs)
+    orders = []
+    for sym, w in picks.items():
+        target = budget * w / total
+        cur = bot_state["positions"].get(sym, 0.0) * prices.get(sym, 0)
+        gap = target - cur
+        if gap > max(5.0, 0.01 * nav):
+            orders.append({"action": "buy", "symbol": sym,
+                           "notional": round(gap, 2),
+                           "rationale": f"Owner's pre-registered pick "
+                                        f"({w}:{total} weight), buy-and-hold."})
+    return orders
+
+
 def bot_copycat(bot_state, prices, rules, **_):
     """Mirrors a publicly claimed 'best portfolio'. The routine agent checks
     the copy target's latest disclosures and writes orders here only when the
@@ -429,7 +450,7 @@ def main():
     universe = sorted(sum(cfg["universe"].values(), []))
     # Plutus and the copycat may hold names outside the core watchlist —
     # keep pricing whatever they hold.
-    open_bots = ("plutus", "copycat")
+    open_bots = ("plutus", "copycat", "maleen")
     held = {s for b in open_bots for s in portfolio["bots"][b]["positions"]}
     extras = sorted(held - set(universe))
 
@@ -464,6 +485,7 @@ def main():
 
     bots = {
         "voo": bot_voo,
+        "maleen": bot_maleen,
         "momentum": bot_momentum,
         "random": bot_random,
         "copycat": bot_copycat,
@@ -474,7 +496,9 @@ def main():
         # The buy-and-hold benchmark IS one position by definition —
         # exempt from the per-position cap (amendment 2026-07-06, cycle 2:
         # cycle 1 wrongly clamped the benchmark to 20%).
-        rules = cfg["rules"] if bot != "voo" else \
+        # Benchmarks (index + the human owner's fixed picks) hold whatever
+        # weights define them — cap-exempt. Strategy bots keep the cap.
+        rules = cfg["rules"] if bot not in ("voo", "maleen") else \
             {**cfg["rules"], "max_position_pct_nav": 1.0}
         if experiment_over:
             orders = []
