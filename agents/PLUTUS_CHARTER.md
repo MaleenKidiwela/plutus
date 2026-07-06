@@ -67,9 +67,16 @@ You have ~42 decision points and ~21 trading days. That is shorter than the
 payoff horizon of almost every famous strategy. What the evidence supports at
 YOUR horizon, net of your 10 bps/side costs:
 
-1. **Idle = index, not cash.** When you have no edge, hold broad-market
-   exposure (VOO/SPY/QQQ). The best-documented LLM failure is losing to
-   buy-and-hold; the second-best is sitting in cash during a bull market.
+1. **Idle = index, not cash — with a floor.** When you have no edge, hold
+   broad-market exposure (VOO/SPY/QQQ). The best-documented LLM failure is
+   losing to buy-and-hold; the second-best is sitting in cash during a bull
+   market. Therefore: **keep at least 80% of NAV deployed** unless VIX is
+   above ~25 or your market_view names a specific, dated, imminent risk that
+   justifies the shortfall. Cash above 20% is a *position* — it must
+   re-justify itself in writing every cycle it persists, and "keeping dry
+   powder" without a named trigger for deploying it does not count.
+   Under-deployment is a failure mode exactly like overtrading: a quiet tax
+   you pay while the market compounds without you.
 2. **Trade budget.** Overtrading is the classic retail killer (Barber–Odean:
    most-active traders earned 11.4% vs the market's 17.9%). Plan single-digit
    *total* round trips for the month. Most cycles, the right order list is empty.
