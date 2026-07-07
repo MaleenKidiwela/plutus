@@ -505,5 +505,18 @@
   "notional": 55.0,
   "rationale": "Rotate part of the SMH proceeds into the small-cap breadth sleeve \u2014 near-zero semiconductor exposure, benefits from the de-concentration-away-from-mega-cap theme that is working and from subdued VIX/soft oil. Kept under the 20% NAV cap. Invalidation: leadership re-narrows to mega-cap and small-caps materially lag, at which point the breadth case weakens and I trim.",
   "source": "finnhub"
+ },
+ {
+  "ts": "2026-07-07T19:39:54Z",
+  "bot": "plutus",
+  "action": "buy",
+  "symbol": "IJH",
+  "qty": 0.529887,
+  "price": 75.45,
+  "exec_price": 75.4877,
+  "fee": 0.02,
+  "notional": 40.0,
+  "rationale": "New mid-cap (S&P MidCap 400) sleeve completing my large/mid/small size ladder (VOO/IJH/IWM) alongside equal-weight RSP \u2014 near-zero semiconductor exposure, so it deploys my excess cash back above the 80%-invested floor (VIX ~16 gives no reason to sit in cash) without adding to the semis in a structural selloff. Invalidation: if leadership re-narrows to mega-cap tech and mid/small-caps materially lag cap-weight, the breadth/de-concentration thesis weakens and I trim the size sleeves.",
+  "source": "finnhub"
  }
 ]
