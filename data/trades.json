@@ -856,5 +856,57 @@
   "notional": 188.21,
   "rationale": "rebalance: toward equal weight",
   "source": "finnhub"
+ },
+ {
+  "ts": "2026-07-09T14:50:11Z",
+  "bot": "maleen",
+  "action": "sell",
+  "symbol": "RKLB",
+  "qty": 1.91568,
+  "price": 83.555,
+  "exec_price": 83.5132,
+  "fee": 0.08,
+  "notional": 159.98,
+  "rationale": "Owner decision 2026-07-09: rotate out of RKLB into AI-datacenter names.",
+  "source": "yahoo"
+ },
+ {
+  "ts": "2026-07-09T14:50:11Z",
+  "bot": "maleen",
+  "action": "buy",
+  "symbol": "APLD",
+  "qty": 1.636979,
+  "price": 32.33,
+  "exec_price": 32.3462,
+  "fee": 0.0265,
+  "notional": 52.95,
+  "rationale": "Owner decision 2026-07-09: equal-weight entry into AI-datacenter/compute names.",
+  "source": "yahoo"
+ },
+ {
+  "ts": "2026-07-09T14:50:11Z",
+  "bot": "maleen",
+  "action": "buy",
+  "symbol": "CIFR",
+  "qty": 2.277751,
+  "price": 23.235,
+  "exec_price": 23.2466,
+  "fee": 0.0265,
+  "notional": 52.95,
+  "rationale": "Owner decision 2026-07-09: equal-weight entry into AI-datacenter/compute names.",
+  "source": "yahoo"
+ },
+ {
+  "ts": "2026-07-09T14:50:11Z",
+  "bot": "maleen",
+  "action": "buy",
+  "symbol": "IREN",
+  "qty": 1.238093,
+  "price": 42.746,
+  "exec_price": 42.7674,
+  "fee": 0.0265,
+  "notional": 52.95,
+  "rationale": "Owner decision 2026-07-09: equal-weight entry into AI-datacenter/compute names.",
+  "source": "yahoo"
  }
 ]

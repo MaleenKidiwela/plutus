@@ -1,73 +1,115 @@
 {
-  "experiment": {
-    "name": "Plutus",
-    "version": "1.0",
-    "preregistered_at": "2026-07-05",
-    "starting_cash_per_bot": 1000.0,
-    "max_trading_days": 21,
-    "cadence": "twice daily, weekdays, cron 30 14,19 * * 1-5 UTC",
-    "note": "Rules frozen before first trade. Any change after start invalidates the run."
+ "experiment": {
+  "name": "Plutus",
+  "version": "1.0",
+  "preregistered_at": "2026-07-05",
+  "starting_cash_per_bot": 1000.0,
+  "max_trading_days": 21,
+  "cadence": "twice daily, weekdays, cron 30 14,19 * * 1-5 UTC",
+  "note": "Rules frozen before first trade. Any change after start invalidates the run."
+ },
+ "rules": {
+  "long_only": true,
+  "leverage": false,
+  "shorting": false,
+  "fractional_shares": true,
+  "max_position_pct_nav": 0.2,
+  "min_cash_buffer_pct_nav": 0.05,
+  "fee_bps_per_side": 5,
+  "slippage_bps_per_side": 5
+ },
+ "bots": {
+  "plutus": {
+   "label": "Plutus",
+   "kind": "llm",
+   "model": "claude-opus-4-8",
+   "charter": "agents/PLUTUS_CHARTER.md",
+   "persona_author": "fable-5",
+   "web_search": {
+    "enabled": true,
+    "max_uses_per_cycle": 6
+   },
+   "tradable": "any US-listed stock or ETF with a live quote at decision time; the core universe below is its priced watchlist, not a restriction"
   },
-  "rules": {
-    "long_only": true,
-    "leverage": false,
-    "shorting": false,
-    "fractional_shares": true,
-    "max_position_pct_nav": 0.20,
-    "min_cash_buffer_pct_nav": 0.05,
-    "fee_bps_per_side": 5,
-    "slippage_bps_per_side": 5
+  "voo": {
+   "label": "VOO Buy & Hold",
+   "kind": "benchmark",
+   "note": "Buys VOO on first cycle, never trades again."
   },
-  "bots": {
-    "plutus": {
-      "label": "Plutus",
-      "kind": "llm",
-      "model": "claude-opus-4-8",
-      "charter": "agents/PLUTUS_CHARTER.md",
-      "persona_author": "fable-5",
-      "web_search": {"enabled": true, "max_uses_per_cycle": 6},
-      "tradable": "any US-listed stock or ETF with a live quote at decision time; the core universe below is its priced watchlist, not a restriction"
-    },
-    "voo": {
-      "label": "VOO Buy & Hold",
-      "kind": "benchmark",
-      "note": "Buys VOO on first cycle, never trades again."
-    },
-    "momentum": {
-      "label": "Momentum Bot",
-      "kind": "mechanical",
-      "top_n": 5,
-      "lookback_snapshots": 10,
-      "rebalance": "first run of each trading day"
-    },
-    "random": {
-      "label": "Random Monkey",
-      "kind": "chance",
-      "positions": 5,
-      "seed": "UTC date YYYYMMDD as integer",
-      "rebalance": "first run of each trading day"
-    },
-    "maleen": {
-      "label": "Maleen",
-      "kind": "human",
-      "picks": {"NVDA": 200, "RKLB": 200, "TSM": 200, "VOO": 400},
-      "method": "The owner's own picks, pre-registered 2026-07-06 (joined at cycle 2), deployed proportionally within the cash buffer, then buy-and-hold for the month.",
-      "note": "Human benchmark — cap-exempt like the index benchmark, since fixed personal weights are what they are. Takes the semiconductor exposure (NVDA/TSM) that Plutus declined in cycle 1, plus RKLB."
-    },
-    "copycat": {
-      "label": "Copycat",
-      "kind": "copy-trading",
-      "target": "Nancy Pelosi's disclosed portfolio (STOCK Act PTRs via quiverquant.com / capitoltrades.com) — the most-copied 'best portfolio online' claim, as marketed by Autopilot ($400M mirrors it)",
-      "method": "On first cycle, mirror the target's currently disclosed stock holdings (proportional weights within position caps, shares only — no options). Afterwards trade only when a NEW disclosure appears; each order's rationale must cite the disclosure with both transaction date and disclosure date so staleness is on the record.",
-      "note": "Tests whether a famous claimed-best portfolio performs when copied under the exact conditions retail copiers face: public-disclosure lag, shares-only, small account. Target swappable here before day 1."
-    }
+  "momentum": {
+   "label": "Momentum Bot",
+   "kind": "mechanical",
+   "top_n": 5,
+   "lookback_snapshots": 10,
+   "rebalance": "first run of each trading day"
   },
-  "universe_note": "The fixed universe below binds the momentum and random baselines (they need a defined candidate pool) and defines the priced watchlist. Plutus may trade beyond it — a fairness asymmetry accepted by design: the goal set for Plutus is to make money.",
-  "universe": {
-    "etf": ["VOO", "QQQ"],
-    "ai_software": ["MSFT", "GOOGL", "META", "PLTR", "CRM", "NOW"],
-    "consumer_tech": ["AAPL", "AMZN", "TSLA", "NFLX"],
-    "semiconductors": ["NVDA", "AMD", "AVGO", "TSM", "MU", "ASML", "QCOM", "ARM", "INTC"],
-    "energy": ["XOM", "CVX", "COP", "SLB", "OXY", "EOG"]
+  "random": {
+   "label": "Random Monkey",
+   "kind": "chance",
+   "positions": 5,
+   "seed": "UTC date YYYYMMDD as integer",
+   "rebalance": "first run of each trading day"
+  },
+  "maleen": {
+   "label": "Maleen",
+   "kind": "human",
+   "picks": {
+    "VOO": 400,
+    "NVDA": 200,
+    "TSM": 200,
+    "APLD": 67,
+    "CIFR": 67,
+    "IREN": 66
+   },
+   "method": "Owner's picks, initially pre-registered 2026-07-06 as buy-and-hold (NVDA/RKLB/TSM 2:2:2, VOO 4). Owner amendment 2026-07-09: sold RKLB (realized loss), rotated proceeds equally into APLD/CIFR/IREN. The human benchmark is hereby an actively managed human portfolio; all owner trades are logged like any bot's.",
+   "note": "Human benchmark \u2014 cap-exempt like the index benchmark. Owner may trade; every owner trade is executed through engine validation and logged."
+  },
+  "copycat": {
+   "label": "Copycat",
+   "kind": "copy-trading",
+   "target": "Nancy Pelosi's disclosed portfolio (STOCK Act PTRs via quiverquant.com / capitoltrades.com) \u2014 the most-copied 'best portfolio online' claim, as marketed by Autopilot ($400M mirrors it)",
+   "method": "On first cycle, mirror the target's currently disclosed stock holdings (proportional weights within position caps, shares only \u2014 no options). Afterwards trade only when a NEW disclosure appears; each order's rationale must cite the disclosure with both transaction date and disclosure date so staleness is on the record.",
+   "note": "Tests whether a famous claimed-best portfolio performs when copied under the exact conditions retail copiers face: public-disclosure lag, shares-only, small account. Target swappable here before day 1."
   }
+ },
+ "universe_note": "The fixed universe below binds the momentum and random baselines (they need a defined candidate pool) and defines the priced watchlist. Plutus may trade beyond it \u2014 a fairness asymmetry accepted by design: the goal set for Plutus is to make money.",
+ "universe": {
+  "etf": [
+   "VOO",
+   "QQQ"
+  ],
+  "ai_software": [
+   "MSFT",
+   "GOOGL",
+   "META",
+   "PLTR",
+   "CRM",
+   "NOW"
+  ],
+  "consumer_tech": [
+   "AAPL",
+   "AMZN",
+   "TSLA",
+   "NFLX"
+  ],
+  "semiconductors": [
+   "NVDA",
+   "AMD",
+   "AVGO",
+   "TSM",
+   "MU",
+   "ASML",
+   "QCOM",
+   "ARM",
+   "INTC"
+  ],
+  "energy": [
+   "XOM",
+   "CVX",
+   "COP",
+   "SLB",
+   "OXY",
+   "EOG"
+  ]
+ }
 }
