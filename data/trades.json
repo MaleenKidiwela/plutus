@@ -1064,5 +1064,83 @@
   "notional": 186.86,
   "rationale": "rebalance: toward equal weight",
   "source": "finnhub"
+ },
+ {
+  "ts": "2026-07-13T14:37:26Z",
+  "bot": "momentum",
+  "action": "sell",
+  "symbol": "QCOM",
+  "qty": 1.008946,
+  "price": 186.94,
+  "exec_price": 186.8465,
+  "fee": 0.0943,
+  "notional": 188.52,
+  "rationale": "rebalance: exited target set",
+  "source": "finnhub"
+ },
+ {
+  "ts": "2026-07-13T14:37:26Z",
+  "bot": "momentum",
+  "action": "buy",
+  "symbol": "SLB",
+  "qty": 3.810971,
+  "price": 48.15,
+  "exec_price": 48.1741,
+  "fee": 0.0918,
+  "notional": 183.59,
+  "rationale": "rebalance: toward equal weight",
+  "source": "finnhub"
+ },
+ {
+  "ts": "2026-07-13T14:37:26Z",
+  "bot": "random",
+  "action": "sell",
+  "symbol": "QQQ",
+  "qty": 0.258848,
+  "price": 716.91,
+  "exec_price": 716.5515,
+  "fee": 0.0927,
+  "notional": 185.48,
+  "rationale": "rebalance: exited target set",
+  "source": "finnhub"
+ },
+ {
+  "ts": "2026-07-13T14:37:26Z",
+  "bot": "random",
+  "action": "sell",
+  "symbol": "ASML",
+  "qty": 0.104171,
+  "price": 1757.77,
+  "exec_price": 1756.8911,
+  "fee": 0.0915,
+  "notional": 183.02,
+  "rationale": "rebalance: exited target set",
+  "source": "finnhub"
+ },
+ {
+  "ts": "2026-07-13T14:37:26Z",
+  "bot": "random",
+  "action": "buy",
+  "symbol": "EOG",
+  "qty": 1.347232,
+  "price": 137.48,
+  "exec_price": 137.5487,
+  "fee": 0.0927,
+  "notional": 185.31,
+  "rationale": "rebalance: toward equal weight",
+  "source": "finnhub"
+ },
+ {
+  "ts": "2026-07-13T14:37:26Z",
+  "bot": "random",
+  "action": "buy",
+  "symbol": "CVX",
+  "qty": 1.030302,
+  "price": 179.77,
+  "exec_price": 179.8599,
+  "fee": 0.0927,
+  "notional": 185.31,
+  "rationale": "rebalance: toward equal weight",
+  "source": "finnhub"
  }
 ]
