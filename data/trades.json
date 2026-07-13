@@ -1142,5 +1142,18 @@
   "notional": 185.31,
   "rationale": "rebalance: toward equal weight",
   "source": "finnhub"
+ },
+ {
+  "ts": "2026-07-13T19:37:27Z",
+  "bot": "maleen",
+  "action": "buy",
+  "symbol": "APLD",
+  "qty": 0.050445,
+  "price": 28.73,
+  "exec_price": 28.7444,
+  "fee": 0.0007,
+  "notional": 1.45,
+  "rationale": "Owner's pre-registered pick (67:1000 weight), buy-and-hold.",
+  "source": "finnhub"
  }
 ]
