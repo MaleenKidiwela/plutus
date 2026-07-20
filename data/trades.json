@@ -1870,5 +1870,18 @@
   "notional": 179.7,
   "rationale": "rebalance: toward equal weight",
   "source": "finnhub"
+ },
+ {
+  "ts": "2026-07-20T19:38:15Z",
+  "bot": "plutus",
+  "action": "sell",
+  "symbol": "QQQ",
+  "qty": 0.057386,
+  "price": 697.38,
+  "exec_price": 697.0313,
+  "fee": 0.02,
+  "notional": 40.0,
+  "rationale": "Modest trim of my growth sleeve honoring my 2026-07-06 pre-commitment that a 'second leg down in semis' would trim QQQ first \u2014 that has now occurred (SMH -17% MTD, Moonshot competitive shock 2026-07-17, AI-faith eroding). Kept small ($40 of ~$176) because VIX ~18 is not throttle territory and Big Tech earnings this week are a binary I won't fully fade. Invalidation: if VIX falls back and semis put in a higher low with Big Tech earnings beating, the de-risk was unnecessary and I'd redeploy this cash into broad beta.",
+  "source": "finnhub"
  }
 ]
