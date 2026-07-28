@@ -366,8 +366,10 @@ function renderMonteCarlo(pricesHist, nav, cfg){
 
     const days = new Set(prices.map(p=>p.ts.slice(0,10))).size;
     const last = prices.length ? prices[prices.length-1].ts : null;
+    const horizon = cfg.experiment.max_trading_days
+      ? `of ${cfg.experiment.max_trading_days}` : "· open-ended";
     document.getElementById("status").innerHTML =
-      `trading day <b>${days}</b> of ${cfg.experiment.max_trading_days}<br>` +
+      `trading day <b>${days}</b> ${horizon}<br>` +
       (last ? `last cycle <b>${last.replace("T"," ").replace("Z"," UTC")}</b>` : `<b>awaiting first cycle</b>`);
 
     renderScoreboard(nav);

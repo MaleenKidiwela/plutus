@@ -473,8 +473,10 @@ def main():
     trading_days = {h["ts"][:10] for h in history}
     first_run_today = today not in trading_days
     first_cycle = len(history) == 0
+    max_days = cfg["experiment"]["max_trading_days"]
     experiment_over = (
-        len(trading_days | {today}) > cfg["experiment"]["max_trading_days"]
+        max_days is not None
+        and len(trading_days | {today}) > max_days
         and not first_cycle
     )
 

@@ -4,9 +4,9 @@
   "version": "1.0",
   "preregistered_at": "2026-07-05",
   "starting_cash_per_bot": 1000.0,
-  "max_trading_days": 21,
+  "max_trading_days": null,
   "cadence": "twice daily, weekdays, cron 30 14,19 * * 1-5 UTC",
-  "note": "Rules frozen before first trade. Any change after start invalidates the run."
+  "note": "Rules frozen before first trade. Originally pre-registered as 21 trading days; owner extended to open-ended on 2026-07-28 (day 16) \u2014 the day-21 snapshot remains the official month-1 verdict. Run continues until the owner stops it."
  },
  "rules": {
   "long_only": true,

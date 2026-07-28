@@ -26,7 +26,7 @@ and serves as Plutus's priced watchlist — but Plutus itself may roam the whole
 US market (an accepted fairness asymmetry: its brief is to make money, not to
 win a controlled comparison). Rules are frozen in
 [`data/config.json`](data/config.json) — pre-registered before the first trade.
-Trading auto-stops after 21 trading days.
+Originally a 21-trading-day experiment; extended open-ended on day 16 (the day-21 snapshot remains the official month-1 verdict). Runs until the owner stops it.
 
 ## How it works
 
