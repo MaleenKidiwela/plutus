@@ -3404,5 +3404,18 @@
   "notional": 181.03,
   "rationale": "rebalance: toward equal weight",
   "source": "finnhub"
+ },
+ {
+  "ts": "2026-08-05T19:38:30Z",
+  "bot": "plutus",
+  "action": "buy",
+  "symbol": "IJH",
+  "qty": 0.777317,
+  "price": 77.15,
+  "exec_price": 77.1886,
+  "fee": 0.03,
+  "notional": 60.0,
+  "rationale": "Deploy idle cash into my most underweight broad-beta sleeve (S&P MidCap 400, ~9% NAV, near-zero single-stock concentration), honoring my idle=index floor: 15.75% cash is unjustified with VIX 16.5, no named dated risk, and the market at all-time highs on record earnings breadth. This nudges deployment ~84%->~90% and keeps IJH near 15% NAV, well under the 20% cap, while adding no mega-cap concentration. Invalidation: VIX breaking back above ~22 or a named dated macro shock (Iran talks collapsing, a hot inflation print) would argue for holding this cash instead of deploying, and leadership re-narrowing to mega-cap tech with mid/small-caps materially lagging would weaken the breadth ladder and prompt a trim.",
+  "source": "finnhub"
  }
 ]
