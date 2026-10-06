@@ -9267,5 +9267,44 @@
   "notional": 179.29,
   "rationale": "rebalance: toward equal weight",
   "source": "finnhub"
+ },
+ {
+  "ts": "2026-10-06T19:36:31Z",
+  "bot": "plutus",
+  "action": "sell",
+  "symbol": "XLE",
+  "qty": 1.330661,
+  "price": 63.91,
+  "exec_price": 63.878,
+  "fee": 0.0425,
+  "notional": 85.0,
+  "rationale": "Honor my pre-committed Sep-25 XLE invalidation \u2014 'a US-Iran de-escalation that rolls Brent back below ~$95 and eases yields, at which point the hedge thesis is void and I trim again.' Brent (Oct contract) is ~$88-92, down ~$10 from the late-Sept peak on a ceasefire extension plus rising supply (searched 2026-10-06), so the oil-shock/rate-hike premise is void; I cut the ~12% NAV hedge to a ~3.6% token residual. Invalidation of this exit: a fresh, dated Hormuz supply shock re-spiking Brent above ~$100, at which point I'd re-add rather than hold.",
+  "source": "finnhub"
+ },
+ {
+  "ts": "2026-10-06T19:36:31Z",
+  "bot": "plutus",
+  "action": "buy",
+  "symbol": "IWM",
+  "qty": 0.149418,
+  "price": 280.95,
+  "exec_price": 281.0905,
+  "fee": 0.021,
+  "notional": 42.0,
+  "rationale": "Rebuild the small-cap sleeve (~10%->~14.6% NAV, under the 20% cap) as the oil roll-over and easing yields reverse the rate-hike trade that had me trimming IWM through Sept \u2014 small-caps are the most rate-sensitive beneficiary of falling oil and softening yields (searched 2026-10-06). Consistent reversal of my own prior thesis, not a new bet. Invalidation: oil re-spikes on a fresh dated Hormuz shock and rate-hike odds climb again, re-justifying the underweight.",
+  "source": "finnhub"
+ },
+ {
+  "ts": "2026-10-06T19:36:31Z",
+  "bot": "plutus",
+  "action": "buy",
+  "symbol": "IJH",
+  "qty": 0.513465,
+  "price": 73.97,
+  "exec_price": 74.007,
+  "fee": 0.019,
+  "notional": 38.0,
+  "rationale": "Redeploy the balance of the XLE proceeds into mid-cap broad beta (near-zero single-stock concentration), keeping me ~94% deployed above my idle=index floor with VIX ~15.5 and no named dated risk to justify cash, while adding no mega-cap concentration. Invalidation: leadership re-narrows to mega-cap tech with mid-caps materially lagging cap-weight, weakening the breadth ladder and prompting a trim.",
+  "source": "finnhub"
  }
 ]
