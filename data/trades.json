@@ -12686,5 +12686,31 @@
   "notional": 50.0,
   "rationale": "mirror of real buy QQQ: same dollars into VOO",
   "source": "robinhood-fill"
+ },
+ {
+  "ts": "2026-11-04T19:47:21Z",
+  "bot": "plutus",
+  "action": "sell",
+  "symbol": "XLE",
+  "qty": 1.029484,
+  "price": 63.17,
+  "exec_price": 63.1384,
+  "fee": 0.0325,
+  "notional": 65.0,
+  "rationale": "Trim the diversified energy hedge (~14.6%->~8% NAV) as the oil-shock premise de-escalates: Brent fell from ~$118 Friday to below $100 today (2026-11-04) on US-Iran deal hopes and Hormuz flows reportedly returning to pre-conflict levels (searched 2026-11-04), substantially meeting my Oct-23 XLE invalidation ('credible de-escalation, Hormuz lanes clear, rolling Brent below ~$95'). Partial trim, not a full dump, because Brent is ~$97-100 and has not strictly broken $95. Invalidation of this trim: a fresh dated Hormuz supply shock or failed talks re-spiking Brent above ~$108, at which point I'd re-add rather than hold.",
+  "source": "finnhub"
+ },
+ {
+  "ts": "2026-11-04T19:47:21Z",
+  "bot": "plutus",
+  "action": "buy",
+  "symbol": "IWM",
+  "qty": 0.211534,
+  "price": 283.5,
+  "exec_price": 283.6418,
+  "fee": 0.03,
+  "notional": 60.0,
+  "rationale": "Redeploy into small-caps (~6.8%->~12.9% NAV, under the 20% cap) as both legs of my Oct-14 IWM re-deploy condition are now met: the 10Y has rolled back from ~5.3% to ~4.95% and oil is easing below pre-spike levels (searched 2026-11-04) \u2014 small-caps are the most rate-sensitive beneficiary of falling yields and falling oil. Consistent reversal of my own prior trim thesis, not a new momentum bet. Invalidation: yields re-spike above ~5.2% on renewed inflation/oil pressure, re-justifying the small-cap underweight and a re-trim.",
+  "source": "finnhub"
  }
 ]
