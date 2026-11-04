@@ -81,14 +81,48 @@ def fetch_yahoo(symbols):
     return prices
 
 
+RH_PRICES_FILE = os.path.join(ROOT, "rh_prices.json")
+RH_MAX_AGE_S = 20 * 60
+
+
+def load_rh_prices():
+    """Robinhood quotes written by the agent just before the run:
+    {"ts": "...Z", "prices": {"QQQ": 690.1, ...}}. The engine can't reach
+    Robinhood itself (the connector lives with the agent), so the agent
+    drops this file; stale or malformed files are ignored."""
+    if not os.path.exists(RH_PRICES_FILE):
+        return {}
+    try:
+        with open(RH_PRICES_FILE) as f:
+            obj = json.load(f)
+        age = (datetime.now(timezone.utc) - datetime.strptime(
+            obj["ts"], "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
+            ).total_seconds()
+        if age > RH_MAX_AGE_S:
+            log(f"rh_prices.json is {age / 60:.0f} min old — ignored")
+            return {}
+        return {str(s).upper(): round(float(p), 4)
+                for s, p in obj["prices"].items() if float(p) > 0}
+    except (ValueError, KeyError, TypeError, AttributeError) as e:
+        log(f"rh_prices.json unreadable: {e}")
+        return {}
+
+
 def fetch_prices(universe):
-    source = "finnhub"
-    prices = fetch_finnhub(universe) if FINNHUB_KEY else {}
+    rh = load_rh_prices()
+    prices = {s: rh[s] for s in universe if s in rh}
+    sources = ["robinhood"] if prices else []
+    missing = [s for s in universe if s not in prices]
+    if missing and FINNHUB_KEY:
+        got = fetch_finnhub(missing)
+        prices.update(got)
+        sources += ["finnhub"] if got else []
     missing = [s for s in universe if s not in prices]
     if missing:
-        source = "finnhub+yahoo" if prices else "yahoo"
-        prices.update(fetch_yahoo(missing))
-    return prices, source
+        got = fetch_yahoo(missing)
+        prices.update(got)
+        sources += ["yahoo"] if got else []
+    return prices, "+".join(sources) or "none"
 
 
 # ---------- Portfolio math ----------
@@ -304,25 +338,14 @@ DECISION_FILE = os.path.join(ROOT, "plutus_decision.json")
 COPYCAT_FILE = os.path.join(ROOT, "copycat_decision.json")
 
 
-def bot_maleen(bot_state, prices, rules, cfg, **_):
-    """The owner's own picks: pre-registered weights, buy-and-hold.
-    Tops up toward target weights until deployed, then never trades."""
-    picks = cfg["bots"]["maleen"]["picks"]
-    total = sum(picks.values())
-    nav = nav_of(bot_state, prices)
-    costs = (rules["fee_bps_per_side"] + rules["slippage_bps_per_side"]) / 10000.0
-    budget = nav * (1 - rules["min_cash_buffer_pct_nav"]) * (1 - costs)
-    orders = []
-    for sym, w in picks.items():
-        target = budget * w / total
-        cur = bot_state["positions"].get(sym, 0.0) * prices.get(sym, 0)
-        gap = target - cur
-        if gap > max(5.0, 0.01 * nav):
-            orders.append({"action": "buy", "symbol": sym,
-                           "notional": round(gap, 2),
-                           "rationale": f"Owner's pre-registered pick "
-                                        f"({w}:{total} weight), buy-and-hold."})
-    return orders
+TRACKED = ("maleen", "shadow_voo")
+
+
+def bot_tracked(**_):
+    """Maleen is the owner's real Robinhood account (since 2026-11-04) and
+    shadow_voo its same-dollars-into-VOO mirror. Both are written only by
+    scripts/real_sync.py from real fills — the engine just marks them."""
+    return []
 
 
 def bot_copycat(bot_state, prices, rules, **_):
@@ -450,8 +473,9 @@ def main():
     universe = sorted(sum(cfg["universe"].values(), []))
     # Plutus and the copycat may hold names outside the core watchlist —
     # keep pricing whatever they hold.
-    open_bots = ("plutus", "copycat", "maleen")
-    held = {s for b in open_bots for s in portfolio["bots"][b]["positions"]}
+    open_bots = ("plutus", "copycat") + TRACKED
+    held = {s for b in open_bots
+            for s in portfolio["bots"].get(b, {}).get("positions", {})}
     extras = sorted(held - set(universe))
 
     ts = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -487,20 +511,29 @@ def main():
 
     bots = {
         "voo": bot_voo,
-        "maleen": bot_maleen,
+        "maleen": bot_tracked,
+        "shadow_voo": bot_tracked,
         "momentum": bot_momentum,
         "random": bot_random,
         "copycat": bot_copycat,
         "plutus": bot_plutus,
     }
     for bot, decide in bots.items():
+        if bot not in portfolio["bots"]:
+            continue
         state = portfolio["bots"][bot]
+        if bot in TRACKED:
+            # Time-weighted index: see real_sync.py. Never trades here.
+            nav = round(state.get("index_factor", 1.0) * nav_of(state, prices), 4)
+            nav_history.append({"ts": ts, "bot": bot, "nav": nav})
+            log(f"{bot}: tracked, NAV {nav:.2f}")
+            continue
         # The buy-and-hold benchmark IS one position by definition —
         # exempt from the per-position cap (amendment 2026-07-06, cycle 2:
         # cycle 1 wrongly clamped the benchmark to 20%).
-        # Benchmarks (index + the human owner's fixed picks) hold whatever
-        # weights define them — cap-exempt. Strategy bots keep the cap.
-        rules = cfg["rules"] if bot not in ("voo", "maleen") else \
+        # Strategy bots keep the cap. (The owner's account is real since
+        # 2026-11-04 and skips the engine entirely — see TRACKED.)
+        rules = cfg["rules"] if bot != "voo" else \
             {**cfg["rules"], "max_position_pct_nav": 1.0}
         if experiment_over:
             orders = []

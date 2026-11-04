@@ -111,12 +111,17 @@
 <main class="col">
 
   <section>
-    <div class="sec-label">Scoreboard — total return since start</div>
+    <div class="sec-label">Real money — Maleen's Robinhood account vs the same dollars in VOO</div>
+    <div class="scoreboard" id="realboard"></div>
+  </section>
+
+  <section>
+    <div class="sec-label">Scoreboard — total return since each contestant's start</div>
     <div class="scoreboard" id="scoreboard"></div>
   </section>
 
   <section>
-    <div class="sec-label">Growth of $1,000</div>
+    <div class="sec-label">Return since each contestant's start</div>
     <div class="panel"><div class="chart-wrap"><canvas id="navChart"></canvas></div></div>
   </section>
 
@@ -159,6 +164,10 @@
     ~40-decision run is a single noisy draw — most professional managers trail the
     index in any given year, and a random bot could plausibly win this window.
     This is an experiment in how an LLM decides, not evidence of edge.
+    <b>Exception:</b> since 2026-11-04 "Maleen (real)" is the owner's real
+    Robinhood account — real money, real fills, every trade approved by the
+    owner in the app — scored against a shadow VOO that receives the same
+    dollars at the same moments. (The July paper-era Maleen picks live in git history.)
     Rules were pre-registered before the first trade; the full audit trail is the
     git history of this repository. Persona by Fable · decisions by Claude Opus 4.8.
   </div>
@@ -172,8 +181,12 @@ const BOTS = {
   momentum: { label:"Momentum Bot",   color:"#2C8A57" },
   random:   { label:"Random Monkey",  color:"#BE4038" },
   copycat:  { label:"Copycat",        color:"#7E5BB5" },
-  maleen:   { label:"Maleen",         color:"#3B6FB5" },
+  maleen:   { label:"Maleen (real)",  color:"#3B6FB5", real:true },
+  shadow_voo:{ label:"Shadow VOO",    color:"#5F6673", real:true },
 };
+// The real account is judged against its shadow (same dollars, same days);
+// paper bots against the paper VOO that started with them.
+const benchFor = k => BOTS[k].real ? "shadow_voo" : "voo";
 const fmt$ = v => "$" + v.toFixed(2);
 const fmtPct = v => (v>=0?"+":"") + (v*100).toFixed(2) + "%";
 const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
@@ -215,9 +228,31 @@ function tbl(rows, headers){
 }
 const signCls = v => v>=0 ? "pos" : "neg";
 
+function renderRealboard(nav, portfolio){
+  const el = document.getElementById("realboard");
+  const m = seriesFor(nav,"maleen"), s = seriesFor(nav,"shadow_voo");
+  if(m.length<1 || s.length<1){ el.innerHTML = `<div class="empty">no real-account data yet</div>`; return; }
+  const ret = x => x.length>1 ? x[x.length-1].nav/x[0].nav-1 : 0;
+  const gap = ret(m) - ret(s);
+  const card = (label, color, big, small, hero) => `<div class="score${hero?" hero":""}">
+    <div class="bn"><span class="sw" style="background:${color}"></span>${label}</div>
+    <div class="rv num">${big}</div><div class="rx num">${small}</div></div>`;
+  const since = m[0].ts.slice(0,10);
+  el.innerHTML =
+    card("Maleen (real)", BOTS.maleen.color,
+      `<span class="${signCls(ret(m))}">${fmtPct(ret(m))}</span>`,
+      `${fmt$(m[m.length-1].nav)} · since ${since}`, true) +
+    card("Shadow VOO", BOTS.shadow_voo.color,
+      `<span class="${signCls(ret(s))}">${fmtPct(ret(s))}</span>`,
+      `${fmt$(s[s.length-1].nav)} · same dollars, same days`) +
+    card("Beating VOO?", "var(--accent)",
+      `<span class="${signCls(gap)}">${fmtPct(gap)}</span>`,
+      gap>=0 ? "ahead of shadow VOO" : "behind shadow VOO");
+}
+
 function renderScoreboard(nav){
   const el = document.getElementById("scoreboard");
-  el.innerHTML = Object.entries(BOTS).map(([k,b])=>{
+  el.innerHTML = Object.entries(BOTS).filter(([k,b])=>!b.real).map(([k,b])=>{
     const s = seriesFor(nav,k);
     const ret = s.length>1 ? s[s.length-1].nav/s[0].nav-1 : 0;
     const last = s.length ? s[s.length-1].nav : 1000;
@@ -235,7 +270,10 @@ function renderNavChart(nav){
     type:"line",
     data:{ labels: labels.map(short),
       datasets: Object.entries(BOTS).map(([k,b])=>{
-        const m = new Map(seriesFor(nav,k).map(p=>[p.ts,p.nav]));
+        // % return from each bot's own first point: the real account starts
+        // with $500 in November, the paper bots with $1,000 in July.
+        const ser = seriesFor(nav,k), base = ser.length ? ser[0].nav : 1;
+        const m = new Map(ser.map(p=>[p.ts,(p.nav/base-1)*100]));
         return { label:b.label, data:labels.map(t=>m.get(t)??null),
           borderColor:b.color, backgroundColor:b.color, spanGaps:true,
           borderWidth:b.hero?2.5:1.5, pointRadius:0, pointHitRadius:8, tension:0.25 };
@@ -246,13 +284,13 @@ function renderNavChart(nav){
       scales:{ x:{ ticks:{ color:css("--muted"), font:{family:"monospace",size:10},
           maxTicksLimit:10 }, grid:{ color:css("--hair") } },
         y:{ ticks:{ color:css("--muted"), font:{family:"monospace",size:10},
-          callback:v=>"$"+v }, grid:{ color:css("--hair") } } } }
+          callback:v=>v+"%" }, grid:{ color:css("--hair") } } } }
   });
 }
 
 function renderMetrics(nav, trades){
-  const bench = seriesFor(nav,"voo");
-  const M = Object.fromEntries(Object.keys(BOTS).map(k=>[k, metrics(seriesFor(nav,k), bench, trades, k)]));
+  const M = Object.fromEntries(Object.keys(BOTS).map(k=>
+    [k, metrics(seriesFor(nav,k), seriesFor(nav,benchFor(k)), trades, k)]));
   const names = Object.entries(BOTS);
   const solid = names.map(([k,b])=>{
     const m = M[k]; if(!m) return [b.label,"–","–","–","–"];
@@ -273,13 +311,20 @@ function renderMetrics(nav, trades){
 }
 
 function renderHoldings(portfolio, prices, trades){
-  const last = prices.length ? prices[prices.length-1].prices : {};
-  // Symbols not yet in a snapshot (e.g. bought between cycles) are
-  // valued at their most recent trade price until the next cycle.
+  const snap = prices.length ? prices[prices.length-1] : {ts:"", prices:{}};
+  // Value each symbol at whichever is newer: the last cycle snapshot or its
+  // most recent trade (e.g. real fills recorded between cycles).
   const tradePx = {};
-  trades.forEach(t => { tradePx[t.symbol] = t.exec_price; });
-  const px = sym => last[sym] ?? tradePx[sym] ?? 0;
-  document.getElementById("holdings").innerHTML = Object.entries(BOTS).map(([k,b])=>{
+  trades.forEach(t => {
+    if(!tradePx[t.symbol] || t.ts >= tradePx[t.symbol].ts) tradePx[t.symbol] = {ts:t.ts, px:t.exec_price};
+  });
+  const px = sym => {
+    const s = snap.prices[sym], t = tradePx[sym];
+    if(s!=null && (!t || snap.ts >= t.ts)) return s;
+    return t ? t.px : (s ?? 0);
+  };
+  document.getElementById("holdings").innerHTML = Object.entries(BOTS)
+    .filter(([k,b])=>portfolio.bots[k]).map(([k,b])=>{
     const st = portfolio.bots[k];
     const rows = Object.entries(st.positions)
       .map(([sym,qty])=>({sym, qty, val:qty*px(sym)}))
@@ -372,6 +417,7 @@ function renderMonteCarlo(pricesHist, nav, cfg){
       `trading day <b>${days}</b> ${horizon}<br>` +
       (last ? `last cycle <b>${last.replace("T"," ").replace("Z"," UTC")}</b>` : `<b>awaiting first cycle</b>`);
 
+    renderRealboard(nav, portfolio);
     renderScoreboard(nav);
     if(nav.length) renderNavChart(nav);
     renderMetrics(nav, trades);

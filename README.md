@@ -18,7 +18,8 @@ baselines under identical rules.
 | **Momentum Bot** | Ranks the universe by trailing return, holds the top 5, rebalances daily. |
 | **Random Monkey** | Picks 5 names at random (seeded by date), rebalances daily. The luck control. |
 | **Copycat** | Mirrors a famous claimed-best portfolio (default: the Pelosi tracker — Autopilot's $400M flagship) under real copier conditions: public-disclosure lag, shares only. Tests whether "the best portfolio online" survives being copied. |
-| **Maleen** | The human benchmark: the owner's own picks (NVDA/RKLB/TSM 2:2:2, VOO 4), pre-registered at cycle 2, buy-and-hold. The owner vs their own AI. |
+| **Maleen (real)** | Since 2026-11-04: the owner's **real** Robinhood account ($500, real fills). Beat-VOO mix — QQQ 45 / VTI 25 / SMH 20 / AVUV 10. Trades are proposed by Claude and execute only after the owner approves them in the app; [`scripts/real_sync.py`](scripts/real_sync.py) records each fill into [`data/maleen_ledger.json`](data/maleen_ledger.json). The engine marks it, never trades it. |
+| **Shadow VOO** | The real account's benchmark: every dollar Maleen moves into or out of the market is mirrored as the same dollars of VOO at the same moment. "Did my picks beat just buying VOO with the same money on the same days?" |
 
 All bots share the same $1,000, cadence, hard rules, and costs (5 bps fee +
 5 bps slippage per side). The 27-name universe binds the mechanical baselines
@@ -31,7 +32,8 @@ Originally a 21-trading-day experiment; extended open-ended on day 16 (the day-2
 ## How it works
 
 - **Engine:** [`scripts/run_cycle.py`](scripts/run_cycle.py) — zero dependencies.
-  Fetches prices (Finnhub, Yahoo fallback), lets each bot trade, validates every
+  Fetches prices (Robinhood quotes dropped by the agent in `rh_prices.json`,
+  then Finnhub, then Yahoo), lets each bot trade, validates every
   order against the hard rules, appends the audit log.
 - **Scheduler:** a Claude Code **routine** (scheduled cloud agent) runs twice
   daily (`30 14,19 * * 1-5` UTC, ~10:30 & ~15:30 ET). The routine agent *is*
@@ -60,6 +62,8 @@ No Anthropic API key is needed — Plutus's thinking runs on the routine itself.
 ## The cycle, step by step (what the routine does)
 
 ```sh
+# 0. agent fetches Robinhood quotes for the universe + held names and writes
+#    rh_prices.json {"ts": "<UTC>Z", "prices": {...}} (ignored if >20 min old)
 python3 scripts/run_cycle.py --quote   # 1. briefing: prices, holdings, rules
 # 2. the agent researches the web, then writes plutus_decision.json
 python3 scripts/run_cycle.py           # 3. engine validates + executes all bots
@@ -76,3 +80,17 @@ python3 scripts/run_cycle.py --dry   # fetches prices, decides, writes nothing
 
 The full research-backed experiment design — prior art, architecture decisions,
 statistical caveats — is in [`plutus-plan.html`](plutus-plan.html).
+
+## The real account
+
+Real trades never go through the engine. After a real fill on Robinhood:
+
+```sh
+python3 scripts/real_sync.py fill QQQ buy 0.252773 692.32 --voo 703.20 --ts 2026-11-04T14:37:49Z --note "why"
+python3 scripts/real_sync.py deposit 100      # new money; marks at live prices
+python3 scripts/real_sync.py mark             # NAV point for Maleen + Shadow VOO
+```
+
+Holdings are published in real dollars (no account numbers). The NAV series is
+a time-weighted index — equal to dollar value until the first later deposit,
+then continuous across deposits, so new money never counts as a gain.

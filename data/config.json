@@ -51,18 +51,16 @@
    "rebalance": "first run of each trading day"
   },
   "maleen": {
-   "label": "Maleen",
-   "kind": "human",
-   "picks": {
-    "VOO": 400,
-    "NVDA": 200,
-    "TSM": 200,
-    "APLD": 67,
-    "CIFR": 67,
-    "IREN": 66
-   },
-   "method": "Owner's picks, initially pre-registered 2026-07-06 as buy-and-hold (NVDA/RKLB/TSM 2:2:2, VOO 4). Owner amendment 2026-07-09: sold RKLB (realized loss), rotated proceeds equally into APLD/CIFR/IREN. The human benchmark is hereby an actively managed human portfolio; all owner trades are logged like any bot's.",
-   "note": "Human benchmark \u2014 cap-exempt like the index benchmark. Owner may trade; every owner trade is executed through engine validation and logged."
+   "label": "Maleen (real)",
+   "kind": "real",
+   "method": "Owner's real Robinhood account, tracked from 2026-11-04 with a $500 deposit. Strategy: beat-VOO mix (QQQ 45 / VTI 25 / SMH 20 in two halves / AVUV 10). Trades are proposed by Claude and executed only with the owner's in-app approval; scripts/real_sync.py records real fills into data/maleen_ledger.json. The engine marks it, never trades it.",
+   "note": "Real money, real fills, no simulated costs (Robinhood: $0 commission; the spread is in the fill price). NAV is a time-weighted index equal to dollar value until the first later deposit. Replaces the paper-era Maleen picks (removed 2026-11-04; see git history)."
+  },
+  "shadow_voo": {
+   "label": "Shadow VOO",
+   "kind": "benchmark",
+   "method": "Mirrors every dollar the real account moves into or out of the market as the same dollars of VOO at the same moment (VOO price interpolated within the fill minute's 1-min bar).",
+   "note": "The fair benchmark for the real account. The paper 'voo' bot started 2026-07-06 and is not comparable."
   },
   "copycat": {
    "label": "Copycat",

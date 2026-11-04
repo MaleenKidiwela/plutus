@@ -1,0 +1,61 @@
+{
+ "inception": "2026-11-04T14:21:00Z",
+ "events": [
+  {
+   "type": "deposit",
+   "ts": "2026-11-04T14:21:00Z",
+   "amount": 500.0,
+   "prices": {}
+  },
+  {
+   "type": "fill",
+   "ts": "2026-11-04T14:37:49Z",
+   "symbol": "QQQ",
+   "side": "buy",
+   "qty": 0.252773,
+   "price": 692.32,
+   "voo_price": 703.2,
+   "note": "Core: Nasdaq-100, the fund that most consistently beat VOO (98% of rolling 3-yr windows since 2016)."
+  },
+  {
+   "type": "fill",
+   "ts": "2026-11-04T14:37:57Z",
+   "symbol": "VTI",
+   "side": "buy",
+   "qty": 0.33204,
+   "price": 376.46,
+   "voo_price": 703.268,
+   "note": "Core: total US market ballast."
+  },
+  {
+   "type": "fill",
+   "ts": "2026-11-04T14:39:11Z",
+   "symbol": "AVUV",
+   "side": "buy",
+   "qty": 0.398279,
+   "price": 125.54,
+   "voo_price": 703.792,
+   "note": "Diversifier: small-cap value, least like big tech."
+  },
+  {
+   "type": "fill",
+   "ts": "2026-11-04T14:39:17Z",
+   "symbol": "SMH",
+   "side": "buy",
+   "qty": 0.097549,
+   "price": 512.56,
+   "voo_price": 703.826,
+   "note": "Satellite, first half: semis -24% from June high; second $50 due ~Nov 18-25."
+  },
+  {
+   "type": "fill",
+   "ts": "2026-11-04T14:41:43Z",
+   "symbol": "QQQ",
+   "side": "buy",
+   "qty": 0.071886,
+   "price": 695.5363,
+   "voo_price": 704.292,
+   "note": "Replaces MTUM (owner call: MTUM trailed VOO over 5y and 9y)."
+  }
+ ]
+}

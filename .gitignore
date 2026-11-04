@@ -1,3 +1,5 @@
 .claude/
 plutus_decision.json
 copycat_decision.json
+rh_prices.json
+__pycache__/

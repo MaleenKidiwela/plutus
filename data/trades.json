@@ -195,58 +195,6 @@
   "source": "finnhub"
  },
  {
-  "ts": "2026-07-06T02:42:58Z",
-  "bot": "maleen",
-  "action": "buy",
-  "symbol": "NVDA",
-  "qty": 0.973747,
-  "price": 194.83,
-  "exec_price": 194.9274,
-  "fee": 0.0949,
-  "notional": 189.81,
-  "rationale": "Owner's pre-registered pick (200:1000 weight), buy-and-hold.",
-  "source": "yahoo"
- },
- {
-  "ts": "2026-07-06T02:42:58Z",
-  "bot": "maleen",
-  "action": "buy",
-  "symbol": "RKLB",
-  "qty": 1.888464,
-  "price": 100.46,
-  "exec_price": 100.5102,
-  "fee": 0.0949,
-  "notional": 189.81,
-  "rationale": "Owner's pre-registered pick (200:1000 weight), buy-and-hold.",
-  "source": "yahoo"
- },
- {
-  "ts": "2026-07-06T02:42:58Z",
-  "bot": "maleen",
-  "action": "buy",
-  "symbol": "TSM",
-  "qty": 0.436971,
-  "price": 434.16,
-  "exec_price": 434.3771,
-  "fee": 0.0949,
-  "notional": 189.81,
-  "rationale": "Owner's pre-registered pick (200:1000 weight), buy-and-hold.",
-  "source": "yahoo"
- },
- {
-  "ts": "2026-07-06T02:42:58Z",
-  "bot": "maleen",
-  "action": "buy",
-  "symbol": "VOO",
-  "qty": 0.554042,
-  "price": 684.84,
-  "exec_price": 685.1824,
-  "fee": 0.1898,
-  "notional": 379.62,
-  "rationale": "Owner's pre-registered pick (400:1000 weight), buy-and-hold.",
-  "source": "yahoo"
- },
- {
   "ts": "2026-07-06T03:02:34Z",
   "bot": "voo",
   "action": "buy",
@@ -296,19 +244,6 @@
   "fee": 0.06,
   "notional": 120.0,
   "rationale": "Small oversold-bounce entry in liquid semis after last week's ~11% panic - the exact right-horizon setup my playbook endorses, not momentum-chasing - with a fresh dated catalyst (Broadcom-Apple 5-yr custom-silicon deal, 2026-07-06) and AI-capex thesis intact. Sized small (~12% NAV). Invalidation: the bounce fails and semis put in a lower low (SMH back through last week's trough), signaling the rout wasn't a one-off panic.",
-  "source": "finnhub"
- },
- {
-  "ts": "2026-07-07T14:44:03Z",
-  "bot": "maleen",
-  "action": "buy",
-  "symbol": "RKLB",
-  "qty": 0.027216,
-  "price": 84.1,
-  "exec_price": 84.142,
-  "fee": 0.0011,
-  "notional": 2.29,
-  "rationale": "Owner's pre-registered pick (200:1000 weight), buy-and-hold.",
   "source": "finnhub"
  },
  {
@@ -858,58 +793,6 @@
   "source": "finnhub"
  },
  {
-  "ts": "2026-07-09T14:50:11Z",
-  "bot": "maleen",
-  "action": "sell",
-  "symbol": "RKLB",
-  "qty": 1.91568,
-  "price": 83.555,
-  "exec_price": 83.5132,
-  "fee": 0.08,
-  "notional": 159.98,
-  "rationale": "Owner decision 2026-07-09: rotate out of RKLB into AI-datacenter names.",
-  "source": "yahoo"
- },
- {
-  "ts": "2026-07-09T14:50:11Z",
-  "bot": "maleen",
-  "action": "buy",
-  "symbol": "APLD",
-  "qty": 1.636979,
-  "price": 32.33,
-  "exec_price": 32.3462,
-  "fee": 0.0265,
-  "notional": 52.95,
-  "rationale": "Owner decision 2026-07-09: equal-weight entry into AI-datacenter/compute names.",
-  "source": "yahoo"
- },
- {
-  "ts": "2026-07-09T14:50:11Z",
-  "bot": "maleen",
-  "action": "buy",
-  "symbol": "CIFR",
-  "qty": 2.277751,
-  "price": 23.235,
-  "exec_price": 23.2466,
-  "fee": 0.0265,
-  "notional": 52.95,
-  "rationale": "Owner decision 2026-07-09: equal-weight entry into AI-datacenter/compute names.",
-  "source": "yahoo"
- },
- {
-  "ts": "2026-07-09T14:50:11Z",
-  "bot": "maleen",
-  "action": "buy",
-  "symbol": "IREN",
-  "qty": 1.238093,
-  "price": 42.746,
-  "exec_price": 42.7674,
-  "fee": 0.0265,
-  "notional": 52.95,
-  "rationale": "Owner decision 2026-07-09: equal-weight entry into AI-datacenter/compute names.",
-  "source": "yahoo"
- },
- {
   "ts": "2026-07-10T14:37:19Z",
   "bot": "momentum",
   "action": "sell",
@@ -1141,19 +1024,6 @@
   "fee": 0.0927,
   "notional": 185.31,
   "rationale": "rebalance: toward equal weight",
-  "source": "finnhub"
- },
- {
-  "ts": "2026-07-14T19:37:07Z",
-  "bot": "maleen",
-  "action": "buy",
-  "symbol": "APLD",
-  "qty": 0.039598,
-  "price": 28.27,
-  "exec_price": 28.2841,
-  "fee": 0.0006,
-  "notional": 1.12,
-  "rationale": "Owner's pre-registered pick (67:1000 weight), buy-and-hold.",
   "source": "finnhub"
  },
  {
@@ -1544,19 +1414,6 @@
   "fee": 0.0897,
   "notional": 179.39,
   "rationale": "rebalance: toward equal weight",
-  "source": "finnhub"
- },
- {
-  "ts": "2026-07-16T19:38:28Z",
-  "bot": "maleen",
-  "action": "buy",
-  "symbol": "APLD",
-  "qty": 0.048505,
-  "price": 26.17,
-  "exec_price": 26.1831,
-  "fee": 0.0006,
-  "notional": 1.27,
-  "rationale": "Owner's pre-registered pick (67:1000 weight), buy-and-hold.",
   "source": "finnhub"
  },
  {
@@ -2454,19 +2311,6 @@
   "fee": 0.025,
   "notional": 50.0,
   "rationale": "Redeploy the balance of XLE proceeds into mid-cap broad beta (near-zero semiconductor exposure), keeping me ~84% deployed above my 80% floor without adding to the binary Big Tech earnings concentration and consistent with my established large/mid/small de-concentration ladder. Invalidation: if leadership re-narrows to mega-cap tech and mid-caps materially lag cap-weight, the breadth thesis weakens and I trim the size sleeves.",
-  "source": "finnhub"
- },
- {
-  "ts": "2026-07-28T14:37:53Z",
-  "bot": "maleen",
-  "action": "buy",
-  "symbol": "APLD",
-  "qty": 0.043423,
-  "price": 26.24,
-  "exec_price": 26.2531,
-  "fee": 0.0006,
-  "notional": 1.14,
-  "rationale": "Owner's pre-registered pick (67:1000 weight), buy-and-hold.",
   "source": "finnhub"
  },
  {
@@ -12129,19 +11973,6 @@
   "source": "finnhub"
  },
  {
-  "ts": "2026-10-30T19:46:46Z",
-  "bot": "maleen",
-  "action": "buy",
-  "symbol": "APLD",
-  "qty": 0.090398,
-  "price": 17.58,
-  "exec_price": 17.5888,
-  "fee": 0.0008,
-  "notional": 1.59,
-  "rationale": "Owner's pre-registered pick (67:1000 weight), buy-and-hold.",
-  "source": "finnhub"
- },
- {
   "ts": "2026-11-02T15:50:27Z",
   "bot": "momentum",
   "action": "sell",
@@ -12725,5 +12556,135 @@
   "notional": 156.53,
   "rationale": "rebalance: toward equal weight",
   "source": "finnhub"
+ },
+ {
+  "ts": "2026-11-04T14:37:49Z",
+  "bot": "maleen",
+  "action": "buy",
+  "symbol": "QQQ",
+  "qty": 0.252773,
+  "price": 692.32,
+  "exec_price": 692.32,
+  "fee": 0.0,
+  "notional": 175.0,
+  "rationale": "Core: Nasdaq-100, the fund that most consistently beat VOO (98% of rolling 3-yr windows since 2016).",
+  "source": "robinhood-fill"
+ },
+ {
+  "ts": "2026-11-04T14:37:49Z",
+  "bot": "shadow_voo",
+  "action": "buy",
+  "symbol": "VOO",
+  "qty": 0.248862,
+  "price": 703.2,
+  "exec_price": 703.2,
+  "fee": 0.0,
+  "notional": 175.0,
+  "rationale": "mirror of real buy QQQ: same dollars into VOO",
+  "source": "robinhood-fill"
+ },
+ {
+  "ts": "2026-11-04T14:37:57Z",
+  "bot": "maleen",
+  "action": "buy",
+  "symbol": "VTI",
+  "qty": 0.33204,
+  "price": 376.46,
+  "exec_price": 376.46,
+  "fee": 0.0,
+  "notional": 125.0,
+  "rationale": "Core: total US market ballast.",
+  "source": "robinhood-fill"
+ },
+ {
+  "ts": "2026-11-04T14:37:57Z",
+  "bot": "shadow_voo",
+  "action": "buy",
+  "symbol": "VOO",
+  "qty": 0.177741,
+  "price": 703.268,
+  "exec_price": 703.268,
+  "fee": 0.0,
+  "notional": 125.0,
+  "rationale": "mirror of real buy VTI: same dollars into VOO",
+  "source": "robinhood-fill"
+ },
+ {
+  "ts": "2026-11-04T14:39:11Z",
+  "bot": "maleen",
+  "action": "buy",
+  "symbol": "AVUV",
+  "qty": 0.398279,
+  "price": 125.54,
+  "exec_price": 125.54,
+  "fee": 0.0,
+  "notional": 50.0,
+  "rationale": "Diversifier: small-cap value, least like big tech.",
+  "source": "robinhood-fill"
+ },
+ {
+  "ts": "2026-11-04T14:39:11Z",
+  "bot": "shadow_voo",
+  "action": "buy",
+  "symbol": "VOO",
+  "qty": 0.071044,
+  "price": 703.792,
+  "exec_price": 703.792,
+  "fee": 0.0,
+  "notional": 50.0,
+  "rationale": "mirror of real buy AVUV: same dollars into VOO",
+  "source": "robinhood-fill"
+ },
+ {
+  "ts": "2026-11-04T14:39:17Z",
+  "bot": "maleen",
+  "action": "buy",
+  "symbol": "SMH",
+  "qty": 0.097549,
+  "price": 512.56,
+  "exec_price": 512.56,
+  "fee": 0.0,
+  "notional": 50.0,
+  "rationale": "Satellite, first half: semis -24% from June high; second $50 due ~Nov 18-25.",
+  "source": "robinhood-fill"
+ },
+ {
+  "ts": "2026-11-04T14:39:17Z",
+  "bot": "shadow_voo",
+  "action": "buy",
+  "symbol": "VOO",
+  "qty": 0.07104,
+  "price": 703.826,
+  "exec_price": 703.826,
+  "fee": 0.0,
+  "notional": 50.0,
+  "rationale": "mirror of real buy SMH: same dollars into VOO",
+  "source": "robinhood-fill"
+ },
+ {
+  "ts": "2026-11-04T14:41:43Z",
+  "bot": "maleen",
+  "action": "buy",
+  "symbol": "QQQ",
+  "qty": 0.071886,
+  "price": 695.5363,
+  "exec_price": 695.5363,
+  "fee": 0.0,
+  "notional": 50.0,
+  "rationale": "Replaces MTUM (owner call: MTUM trailed VOO over 5y and 9y).",
+  "source": "robinhood-fill"
+ },
+ {
+  "ts": "2026-11-04T14:41:43Z",
+  "bot": "shadow_voo",
+  "action": "buy",
+  "symbol": "VOO",
+  "qty": 0.070992,
+  "price": 704.292,
+  "exec_price": 704.292,
+  "fee": 0.0,
+  "notional": 50.0,
+  "rationale": "mirror of real buy QQQ: same dollars into VOO",
+  "source": "robinhood-fill"
  }
 ]
