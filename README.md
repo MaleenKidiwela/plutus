@@ -18,7 +18,7 @@ baselines under identical rules.
 | **Momentum Bot** | Ranks the universe by trailing return, holds the top 5, rebalances daily. |
 | **Random Monkey** | Picks 5 names at random (seeded by date), rebalances daily. The luck control. |
 | **Copycat** | Mirrors a famous claimed-best portfolio (default: the Pelosi tracker — Autopilot's $400M flagship) under real copier conditions: public-disclosure lag, shares only. Tests whether "the best portfolio online" survives being copied. |
-| **Maleen (real)** | Since 2026-11-04: the owner's **real** Robinhood account ($500, real fills). Beat-VOO mix — QQQ 45 / VTI 25 / SMH 20 / AVUV 10. Trades are proposed by Claude and execute only after the owner approves them in the app; [`scripts/real_sync.py`](scripts/real_sync.py) records each fill into [`data/maleen_ledger.json`](data/maleen_ledger.json). The engine marks it, never trades it. |
+| **Maleen (real)** | Since 2026-11-04: the owner's **real** Robinhood account ($500, real fills). Beat-VOO mix — QQQ 45 / VTI 25 / AVUV 10 / XLV ~10 / cash ~10 (SMH sold 2026-11-05). Trades are proposed by Claude and execute only after the owner approves them in the app; [`scripts/real_sync.py`](scripts/real_sync.py) records each fill into [`data/maleen_ledger.json`](data/maleen_ledger.json). The engine marks it, never trades it. |
 | **Shadow VOO** | The real account's benchmark: every dollar Maleen moves into or out of the market is mirrored as the same dollars of VOO at the same moment. "Did my picks beat just buying VOO with the same money on the same days?" |
 
 All bots share the same $1,000, cadence, hard rules, and costs (5 bps fee +

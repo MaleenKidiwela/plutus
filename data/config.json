@@ -53,7 +53,7 @@
   "maleen": {
    "label": "Maleen (real)",
    "kind": "real",
-   "method": "Owner's real Robinhood account, tracked from 2026-11-04 with a $500 deposit. Strategy: beat-VOO mix (QQQ 45 / VTI 25 / SMH 20 in two halves / AVUV 10). Trades are proposed by Claude and executed only with the owner's in-app approval; scripts/real_sync.py records real fills into data/maleen_ledger.json. The engine marks it, never trades it.",
+   "method": "Owner's real Robinhood account, tracked from 2026-11-04 with a $500 deposit. Strategy: beat-VOO mix (QQQ 45 / VTI 25 / AVUV 10 / XLV ~10 / cash ~10; SMH sold 2026-11-05 and its second tranche dropped). Trades are proposed by Claude and executed only with the owner's in-app approval; scripts/real_sync.py records real fills into data/maleen_ledger.json. The engine marks it, never trades it.",
    "note": "Real money, real fills, no simulated costs (Robinhood: $0 commission; the spread is in the fill price). NAV is a time-weighted index equal to dollar value until the first later deposit. Replaces the paper-era Maleen picks (removed 2026-11-04; see git history)."
   },
   "shadow_voo": {

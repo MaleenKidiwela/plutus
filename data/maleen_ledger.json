@@ -56,6 +56,26 @@
    "price": 695.5363,
    "voo_price": 704.292,
    "note": "Replaces MTUM (owner call: MTUM trailed VOO over 5y and 9y)."
+  },
+  {
+   "type": "fill",
+   "ts": "2026-11-05T15:01:48Z",
+   "symbol": "SMH",
+   "side": "sell",
+   "qty": 0.097549,
+   "price": 469.55,
+   "voo_price": 692.301,
+   "note": "Owner call: out of the chip fund after the Democratic sweep raised data-center risk; second SMH tranche dropped."
+  },
+  {
+   "type": "fill",
+   "ts": "2026-11-05T15:02:53Z",
+   "symbol": "XLV",
+   "side": "buy",
+   "qty": 0.238678,
+   "price": 191.89,
+   "voo_price": 691.881,
+   "note": "SMH proceeds into health care: lowers AI exposure and fits the new Congress's Medicaid/ACA agenda."
   }
  ]
 }
