@@ -13323,5 +13323,18 @@
   "notional": 154.66,
   "rationale": "rebalance: toward equal weight",
   "source": "finnhub"
+ },
+ {
+  "ts": "2026-11-10T19:47:53Z",
+  "bot": "plutus",
+  "action": "sell",
+  "symbol": "IWM",
+  "qty": 0.142903,
+  "price": 280.05,
+  "exec_price": 279.91,
+  "fee": 0.02,
+  "notional": 40.0,
+  "rationale": "Trim the small-cap sleeve (~12.9%->~8.8% NAV), my most rate-sensitive holding, as today's hot October CPI (released 2026-11-10) pushed the 10Y back toward ~5.0% and lifted Dec-8/9 hike odds above 80% with Waller floating 50bps (searched 2026-11-10) \u2014 renewed inflation/rate pressure that substantially meets my Nov-4 IWM invalidation ('yields re-spike on renewed inflation/oil pressure, re-justifying the small-cap underweight'). Same-direction continuation of my repeated rate-sensitivity discipline, not a new bet; measured size because the 10Y is ~5.0%, just under my strict ~5.2% tick, but the hawkish catalyst is unambiguous. Invalidation of this trim: CPI/yields roll back and Dec hike odds fade below ~50%, at which point small-caps regain the rate-sensitive benefit and I'd redeploy.",
+  "source": "finnhub"
  }
 ]
