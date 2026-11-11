@@ -76,6 +76,16 @@
    "price": 191.89,
    "voo_price": 691.881,
    "note": "SMH proceeds into health care: lowers AI exposure and fits the new Congress's Medicaid/ACA agenda."
+  },
+  {
+   "type": "fill",
+   "ts": "2026-11-05T17:40:21Z",
+   "symbol": "XLV",
+   "side": "sell",
+   "qty": 0.238678,
+   "price": 186.505,
+   "voo_price": 678.257,
+   "note": "owner sold XLV in the app (own decision)"
   }
  ]
 }

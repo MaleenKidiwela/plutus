@@ -52,19 +52,18 @@
    }
   },
   "maleen": {
-   "cash": 50.005646,
+   "cash": 94.520287,
    "positions": {
     "QQQ": 0.324659,
     "VTI": 0.33204,
-    "AVUV": 0.398279,
-    "XLV": 0.238678
+    "AVUV": 0.398279
    },
    "index_factor": 1.0
   },
   "shadow_voo": {
-   "cash": 50.005646,
+   "cash": 94.520287,
    "positions": {
-    "VOO": 0.639713
+    "VOO": 0.574082
    },
    "index_factor": 1.0
   }
