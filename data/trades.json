@@ -13557,5 +13557,83 @@
   "notional": 44.51,
   "rationale": "mirror of real sell XLV: same dollars into VOO",
   "source": "robinhood-fill"
+ },
+ {
+  "ts": "2026-11-12T14:26:49Z",
+  "bot": "maleen",
+  "action": "buy",
+  "symbol": "AMD",
+  "qty": 0.166888,
+  "price": 566.3053,
+  "exec_price": 566.3053,
+  "fee": 0.0,
+  "notional": 94.51,
+  "rationale": "owner bought AMD premarket (own decision)",
+  "source": "robinhood-fill"
+ },
+ {
+  "ts": "2026-11-12T14:26:49Z",
+  "bot": "shadow_voo",
+  "action": "buy",
+  "symbol": "VOO",
+  "qty": 0.136356,
+  "price": 693.11,
+  "exec_price": 693.11,
+  "fee": 0.0,
+  "notional": 94.51,
+  "rationale": "mirror of real buy AMD: same dollars into VOO",
+  "source": "robinhood-fill"
+ },
+ {
+  "ts": "2026-11-12T14:30:01Z",
+  "bot": "maleen",
+  "action": "sell",
+  "symbol": "AVUV",
+  "qty": 0.398279,
+  "price": 122.91,
+  "exec_price": 122.91,
+  "fee": 0.0,
+  "notional": 48.95,
+  "rationale": "owner sold AVUV to fund more AMD (own decision)",
+  "source": "robinhood-fill"
+ },
+ {
+  "ts": "2026-11-12T14:30:01Z",
+  "bot": "shadow_voo",
+  "action": "sell",
+  "symbol": "VOO",
+  "qty": 0.070637,
+  "price": 693.013,
+  "exec_price": 693.013,
+  "fee": 0.0,
+  "notional": 48.95,
+  "rationale": "mirror of real sell AVUV: same dollars into VOO",
+  "source": "robinhood-fill"
+ },
+ {
+  "ts": "2026-11-12T14:33:49Z",
+  "bot": "maleen",
+  "action": "buy",
+  "symbol": "AMD",
+  "qty": 0.087436,
+  "price": 559.8335,
+  "exec_price": 559.8335,
+  "fee": 0.0,
+  "notional": 48.95,
+  "rationale": "owner added AMD with the AVUV proceeds (own decision)",
+  "source": "robinhood-fill"
+ },
+ {
+  "ts": "2026-11-12T14:33:49Z",
+  "bot": "shadow_voo",
+  "action": "buy",
+  "symbol": "VOO",
+  "qty": 0.070561,
+  "price": 693.72,
+  "exec_price": 693.72,
+  "fee": 0.0,
+  "notional": 48.95,
+  "rationale": "mirror of real buy AMD: same dollars into VOO",
+  "source": "robinhood-fill"
  }
 ]

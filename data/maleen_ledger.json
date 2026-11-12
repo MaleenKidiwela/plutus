@@ -86,6 +86,36 @@
    "price": 186.505,
    "voo_price": 678.257,
    "note": "owner sold XLV in the app (own decision)"
+  },
+  {
+   "type": "fill",
+   "ts": "2026-11-12T14:26:49Z",
+   "symbol": "AMD",
+   "side": "buy",
+   "qty": 0.166888,
+   "price": 566.3053,
+   "voo_price": 693.11,
+   "note": "owner bought AMD premarket (own decision)"
+  },
+  {
+   "type": "fill",
+   "ts": "2026-11-12T14:30:01Z",
+   "symbol": "AVUV",
+   "side": "sell",
+   "qty": 0.398279,
+   "price": 122.91,
+   "voo_price": 693.013,
+   "note": "owner sold AVUV to fund more AMD (own decision)"
+  },
+  {
+   "type": "fill",
+   "ts": "2026-11-12T14:33:49Z",
+   "symbol": "AMD",
+   "side": "buy",
+   "qty": 0.087436,
+   "price": 559.8335,
+   "voo_price": 693.72,
+   "note": "owner added AMD with the AVUV proceeds (own decision)"
   }
  ]
 }
