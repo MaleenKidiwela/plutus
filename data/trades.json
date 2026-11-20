@@ -14805,5 +14805,18 @@
   "notional": 148.42,
   "rationale": "rebalance: toward equal weight",
   "source": "finnhub"
+ },
+ {
+  "ts": "2026-11-20T19:46:23Z",
+  "bot": "voo",
+  "action": "buy",
+  "symbol": "VOO",
+  "qty": 0.001797,
+  "price": 639.74,
+  "exec_price": 640.0599,
+  "fee": 0.0006,
+  "notional": 1.15,
+  "rationale": "Benchmark: hold the market, do nothing else.",
+  "source": "finnhub"
  }
 ]
